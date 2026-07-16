@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OLDCARTS Consulting — Your Business Has Symptoms. We Diagnose Them.</title>
+  <meta name="description" content="Operations consulting with a clinician's rigor. OLDCARTS applies an eight-point diagnostic method to small-business operations — process documentation, scorecards, strategic priorities, and systems that outlive the consultant." />
+  <meta property="og:title" content="OLDCARTS Consulting — Operations Diagnostics" />
+  <meta property="og:description" content="Your business has symptoms. We diagnose them. A clinician's rigor for small-business operations." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.oldcarts.com/" />
+  <meta property="og:image" content="/assets/img/og.png" />
+  <meta name="theme-color" content="#0A0F0D" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="/assets/fonts/fraunces-latin-full-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/fraunces-latin-full-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/fragment-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/css/main.css" />
+</head>
+<body data-theme="exam-room">
+  <script>document.body.classList.add('js');</script>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ══════════ PRELOADER ══════════ -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader__inner">
+      <svg class="preloader__ecg" viewBox="0 0 320 80" fill="none" aria-hidden="true">
+        <path id="preloader-trace" d="M0 40 H90 L102 40 L110 18 L118 62 L126 34 L134 40 H210 L222 40 L230 18 L238 62 L246 34 L254 40 H320" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      <div class="preloader__row">
+        <span class="preloader__label">CALIBRATING INSTRUMENTS</span>
+        <span class="preloader__pct" id="preloader-pct">00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ CURSOR ══════════ -->
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <div class="cursor__ring"></div>
+    <div class="cursor__dot"></div>
+    <div class="cursor__label" id="cursor-label"></div>
+  </div>
+
+  <!-- ══════════ HUD FRAME ══════════ -->
+  <header class="hud" id="hud">
+    <div class="hud__bar">
+      <a class="hud__mark" href="#top" aria-label="OLDCARTS Consulting — home">
+        <svg class="hud__pulse-icon" viewBox="0 0 34 14" aria-hidden="true"><path d="M0 7 H8 L11 7 L14 1 L18 13 L21 4 L23 7 H34" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+        <span>OLDCARTS<sup>®</sup></span>
+      </a>
+      <div class="hud__readouts" aria-hidden="true">
+        <span class="hud__readout"><em>LOC</em> WATKINSVILLE, GA</span>
+        <span class="hud__readout"><em>LAT</em> 33.86°N&thinsp;/&thinsp;83.41°W</span>
+        <span class="hud__readout"><em>T</em> <span id="hud-clock">—:—:—</span></span>
+        <span class="hud__readout hud__readout--pulse"><em>HR</em> <span id="hud-bpm">58</span> BPM <i class="hud__beat" id="hud-beat"></i></span>
+        <span class="hud__readout"><em>SEC</em> <span id="hud-sec">00/05</span></span>
+      </div>
+      <nav class="hud__nav" aria-label="Primary">
+        <a href="#method">Method</a>
+        <a href="#care">Care</a>
+        <a href="#protocols">Protocols</a>
+        <a href="#practitioner">Practitioner</a>
+        <a href="#consult" class="hud__cta">Consult</a>
+      </nav>
+      <button class="hud__menu-btn" id="menu-btn" aria-expanded="false" aria-controls="overlay-menu">
+        <span class="hud__menu-label">MENU</span>
+        <span class="hud__menu-lines" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
+    <div class="hud__progress" aria-hidden="true"><div class="hud__progress-fill" id="scroll-progress"></div></div>
+  </header>
+
+  <!-- ══════════ OVERLAY MENU ══════════ -->
+  <div class="menu" id="overlay-menu" aria-hidden="true">
+    <div class="menu__bg"></div>
+    <nav class="menu__nav" aria-label="Menu">
+      <a href="#method" data-menu-link><span class="menu__num">01</span><span class="menu__word">Method</span></a>
+      <a href="#care" data-menu-link><span class="menu__num">02</span><span class="menu__word">Course of Care</span></a>
+      <a href="#protocols" data-menu-link><span class="menu__num">03</span><span class="menu__word">Protocols</span></a>
+      <a href="#practitioner" data-menu-link><span class="menu__num">04</span><span class="menu__word">Practitioner</span></a>
+      <a href="#consult" data-menu-link><span class="menu__num">05</span><span class="menu__word">Consult</span></a>
+      <a href="/guide/" data-menu-link class="menu__guide"><span class="menu__num">✚</span><span class="menu__word">How this site was made</span></a>
+    </nav>
+    <div class="menu__foot">
+      <a href="mailto:laura.smith@oldcarts.com">laura.smith@oldcarts.com</a>
+      <a href="tel:+14046433404">(404) 643-3404</a>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <!-- ══════════ 00 / HERO ══════════ -->
+    <section class="hero" id="top" data-section="00">
+      <canvas class="hero__canvas" id="hero-canvas" aria-hidden="true"></canvas>
+      <div class="hero__vignette" aria-hidden="true"></div>
+
+      <div class="hero__content">
+        <p class="hero__eyebrow mono" data-reveal>
+          <span class="tick">✚</span> OPERATIONS DIAGNOSTICS — EST. WATKINSVILLE, GEORGIA
+        </p>
+        <h1 class="hero__title">
+          <span class="hero__line" data-split>Your business</span>
+          <span class="hero__line" data-split>has <em class="wonk">symptoms.</em></span>
+          <span class="hero__line hero__line--answer" data-split><em>We diagnose them<span class="pulse-dot">.</span></em></span>
+        </h1>
+        <p class="hero__sub" data-reveal>
+          Consulting with a clinician's rigor — for small businesses that need
+          <em>systems, not heroics.</em> No prescriptions before diagnosis.
+        </p>
+        <div class="hero__actions" data-reveal>
+          <a class="btn btn--solid" href="#consult" data-magnetic>Begin the consultation</a>
+          <a class="btn btn--ghost" href="#method" data-magnetic>Read the method</a>
+        </div>
+      </div>
+
+      <div class="hero__annot mono" aria-hidden="true">
+        <span class="hero__annot-line"></span>
+        <span class="hero__annot-text">FIG. 00 — YOUR BUSINESS, LIVE<br/><em id="annot-state">STATE: UNDIAGNOSED</em></span>
+      </div>
+
+      <div class="hero__vitals mono" aria-hidden="true">
+        <div class="vital">
+          <span class="vital__key">REV / FLOW</span>
+          <canvas class="vital__ecg" id="vital-ecg" width="220" height="36"></canvas>
+        </div>
+        <div class="vital">
+          <span class="vital__key">OPS INDEX</span>
+          <span class="vital__val" id="vital-ops">—</span>
+        </div>
+        <div class="vital">
+          <span class="vital__key">SYS PRESSURE</span>
+          <span class="vital__val" id="vital-sys">—</span>
+        </div>
+        <div class="vital vital--scroll">
+          <span class="vital__key">EXAMINE</span>
+          <span class="vital__scroll-ind"><i></i></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ MARQUEE ══════════ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track" id="marquee-track">
+        <span class="marquee__seg">Diagnosis before prescription <i class="marquee__glyph">✚</i> Systems over heroics <i class="marquee__glyph">✚</i> Context before cure <i class="marquee__glyph">✚</i> Right-sized for small business <i class="marquee__glyph">✚</i> </span>
+      </div>
+    </div>
+
+    <!-- ══════════ 01 / METHOD ══════════ -->
+    <section class="method" id="method" data-section="01">
+      <div class="section-head">
+        <span class="section-head__num mono">01 — THE METHOD</span>
+        <h2 class="section-head__title" data-split-lines>
+          Eight questions physicians ask about a&nbsp;symptom.<br/>
+          <em>We ask them of your business.</em>
+        </h2>
+        <p class="section-head__note">
+          OLDCARTS is a clinical mnemonic used to characterize pain before treating it.
+          It is also our name, our origin, and the instrument we bring to every engagement.
+          <span class="mono method__hint">— HOVER / TAP TO EXAMINE</span>
+        </p>
+      </div>
+
+      <div class="method__frame"><span class="tickbr" aria-hidden="true"></span>
+      <div class="method__instrument" id="method-instrument" role="list">
+        <!-- slats injected-enhanced; base markup for no-JS -->
+        <article class="slat" role="listitem" data-slat="0">
+          <div class="slat__spine"><span class="slat__letter">O</span><span class="slat__term mono">ONSET</span></div>
+          <div class="slat__body">
+            <h3 class="slat__q"><em>When did it start?</em></h3>
+            <p class="slat__a">Pinpoint the moment things drifted — the hire, the growth spurt, the tool that never got adopted. Every operational ache has a first day.</p>
+            <span class="slat__ref mono">REF 01 / ONSET</span>
+          </div>
+        </article>
+        <article class="slat" role="listitem" data-slat="1">
+          <div class="slat__spine"><span class="slat__letter">L</span><span class="slat__term mono">LOCATION</span></div>
+          <div class="slat__body">
+            <h3 class="slat__q"><em>Where does it hurt?</em></h3>
+            <p class="slat__a">Isolate the function where the pain actually lives — sales handoffs, fulfillment, invoicing, cash flow — not where it's loudest.</p>
+            <span class="slat__ref mono">REF 02 / LOCATION</span>
+          </div>
+        </article>
+        <article class="slat" role="listitem" data-slat="2">
+          <div class="slat__spine"><span class="slat__letter">D</span><span class="slat__term mono">DURATION</span></div>
+          <div class="slat__body">
+            <h3 class="slat__q"><em>How long has it lasted?</em></h3>
+            <p class="slat__a">Chronic or acute? A six-year workaround is a different disease than a six-week fire — and it gets a different treatment.</p>
+            <span class="slat__ref mono">REF 03 / DURATION</span>
+          </div>
+        </article>
+        <article class="slat" role="listitem" data-slat="3">
+          <div class="slat__spine"><span class="slat__letter">C</span><span class="slat__term mono">CHARACTER</span></div>
+          <div class="slat__body">
+            <h3 class="slat__q"><em>What does it feel like?</em></h3>
+            <p class="slat__a">Dropped balls, duplicate work, every decision bottlenecked at the owner's desk. Naming the texture of the problem is half the diagnosis.</p>
+            <span class="slat__ref mono">REF 04 / CHARACTER</span>
+          </div>
+        </article>
+        <article class="slat" role="listitem" data-slat="4">
+          <div class="slat__spine"><span class="slat__letter">A</span><span class="slat__term mono">AGGRAVATING</span></div>
+          <div class="slat__body">
+            <h3 class="slat__q"><em>What makes it worse?</em></h3>
+            <p class="slat__a">Volume spikes. Key people on vacation. Quarter-end crunch. The triggers that inflame a process tell you exactly where it's weak.</p>
+            <span class="slat__ref mono">REF 05 / AGGRAVATING</span>
+          </div>
+        </article>
+        <article class="slat" role="listitem" data-slat="5">
+          <div class="slat__spine"><span class="slat__letter">R</span><span class="slat__term mono">RELIEVING</span></div>
+          <div class="slat__body">
+            <h3 class="slat__q"><em>What makes it better?</em></h3>
+            <p class="slat__a">The workarounds your team invented to ease the pain are clues to the cure. We study them before we replace them.</p>
+            <span class="slat__ref mono">REF 06 / RELIEVING</span>
+          </div>
+        </article>
+        <article class="slat" role="listitem" data-slat="6">
+          <div class="slat__spine"><span class="slat__letter">T</span><span class="slat__term mono">TIMING</span></div>
+          <div class="slat__body">
+            <h3 class="slat__q"><em>When does it flare?</em></h3>
+            <p class="slat__a">Seasonal, weekly, whenever a certain client calls — patterns are diagnostic gold. We chart them before prescribing anything.</p>
+            <span class="slat__ref mono">REF 07 / TIMING</span>
+          </div>
+        </article>
+        <article class="slat" role="listitem" data-slat="7">
+          <div class="slat__spine"><span class="slat__letter">S</span><span class="slat__term mono">SEVERITY</span></div>
+          <div class="slat__body">
+            <h3 class="slat__q"><em>How bad is it, one to ten?</em></h3>
+            <p class="slat__a">Quantify the cost in hours, dollars, and sleep. Severity sets priority — treatment goes where the bleeding is worst.</p>
+            <span class="slat__ref mono">REF 08 / SEVERITY</span>
+          </div>
+        </article>
+      </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 02 / COURSE OF CARE ══════════ -->
+    <section class="care" id="care" data-section="02">
+      <div class="care__pin" id="care-pin">
+        <div class="section-head section-head--center">
+          <span class="section-head__num mono">02 — COURSE OF CARE</span>
+          <h2 class="section-head__title">From intake <em>to recovery.</em></h2>
+        </div>
+        <div class="care__chart">
+          <svg class="care__ecg" id="care-ecg" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
+            <path id="care-trace-bg" d="" stroke="rgba(237,231,219,.08)" stroke-width="1.5" fill="none"/>
+            <path id="care-trace" d="" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+          <ol class="care__stages">
+            <li class="care__stage" data-stage="0">
+              <span class="care__node" aria-hidden="true"></span>
+              <span class="care__num mono">01 <i>· WEEK 0</i></span>
+              <h3>Intake</h3>
+              <p>A conversation, not a pitch. We take the full history of the business before forming a single opinion.</p>
+            </li>
+            <li class="care__stage" data-stage="1">
+              <span class="care__node" aria-hidden="true"></span>
+              <span class="care__num mono">02 <i>· WEEKS 1–2</i></span>
+              <h3>Examination</h3>
+              <p>We observe the work where it happens — the processes, the tools, the numbers, the people carrying it all.</p>
+            </li>
+            <li class="care__stage" data-stage="2">
+              <span class="care__node" aria-hidden="true"></span>
+              <span class="care__num mono">03 <i>· WEEK 3</i></span>
+              <h3>Diagnosis</h3>
+              <p>A written findings report: what is broken, why it broke, and what it costs you every month it stays broken.</p>
+            </li>
+            <li class="care__stage" data-stage="3">
+              <span class="care__node" aria-hidden="true"></span>
+              <span class="care__num mono">04 <i>· WEEKS 4–8</i></span>
+              <h3>Treatment</h3>
+              <p>Right-sized interventions — documented processes, scorecards, systems your team actually adopts.</p>
+            </li>
+            <li class="care__stage" data-stage="4">
+              <span class="care__node" aria-hidden="true"></span>
+              <span class="care__num mono">05 <i>· DAY 30 +</i></span>
+              <h3>Recovery</h3>
+              <p>Your team runs it without us. We check vitals at thirty days — then we get out of the way.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 03 / PROTOCOLS ══════════ -->
+    <section class="protocols" id="protocols" data-section="03">
+      <div class="section-head">
+        <span class="section-head__num mono">03 — TREATMENT PROTOCOLS</span>
+        <h2 class="section-head__title" data-split-lines>Four interventions.<br/><em>Prescribed only after diagnosis.</em></h2>
+      </div>
+
+      <div class="protocols__list" id="protocols-list">
+        <article class="protocol" data-protocol="0" tabindex="0">
+          <header class="protocol__head">
+            <span class="protocol__num mono">RX—01</span>
+            <h3 class="protocol__name">Process Documentation <em>&amp; Mapping</em></h3>
+            <p class="protocol__gist">Every business has processes. Most of them live in someone's head.</p>
+            <span class="protocol__toggle" aria-hidden="true"></span>
+          </header>
+          <div class="protocol__body">
+            <p>We surface the critical workflows trapped in institutional memory and structure them in platforms your team already uses — or help you choose one worth adopting.</p>
+            <ul class="protocol__rx mono">
+              <li>Documented core business processes</li>
+              <li>Step-by-step workflow maps</li>
+              <li>Assignable ownership at each step</li>
+              <li>A platform your team can actually use</li>
+              <li>Team training on the platform</li>
+              <li>30-day follow-up support</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="protocol" data-protocol="1" tabindex="0">
+          <header class="protocol__head">
+            <span class="protocol__num mono">RX—02</span>
+            <h3 class="protocol__name">Business Scorecard <em>Design &amp; Setup</em></h3>
+            <p class="protocol__gist">You can't manage what you can't measure — but most small businesses are drowning in data they can't act on.</p>
+            <span class="protocol__toggle" aria-hidden="true"></span>
+          </header>
+          <div class="protocol__body">
+            <p>Custom scorecards tracking five to fifteen key metrics — the vital signs of your business — with a weekly rhythm to actually read them.</p>
+            <ul class="protocol__rx mono">
+              <li>Custom KPI identification workshop</li>
+              <li>Scorecard template — Excel &amp; digital</li>
+              <li>Weekly review structure &amp; facilitation guide</li>
+              <li>Owner and team setup walkthrough</li>
+              <li>30-day check-in to refine</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="protocol" data-protocol="2" tabindex="0">
+          <header class="protocol__head">
+            <span class="protocol__num mono">RX—03</span>
+            <h3 class="protocol__name">Strategic Planning <em>&amp; Priorities</em></h3>
+            <p class="protocol__gist">Vision is cheap. Ninety-day priorities with names attached are not.</p>
+            <span class="protocol__toggle" aria-hidden="true"></span>
+          </header>
+          <div class="protocol__body">
+            <p>We translate where you want to go into three to seven focused goals per quarter — each with an owner, a deadline, and a review rhythm that keeps them alive.</p>
+            <ul class="protocol__rx mono">
+              <li>Annual goal-setting session</li>
+              <li>90-day company priorities — 3–7 focused goals</li>
+              <li>Individual accountability assignments</li>
+              <li>Meeting rhythm &amp; agenda template</li>
+              <li>Quarterly check-in and reset</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="protocol" data-protocol="3" tabindex="0">
+          <header class="protocol__head">
+            <span class="protocol__num mono">RX—04</span>
+            <h3 class="protocol__name">Tools &amp; Systems <em>Implementation</em></h3>
+            <p class="protocol__gist">Software you bought but never adopted isn't a system. It's a subscription.</p>
+            <span class="protocol__toggle" aria-hidden="true"></span>
+          </header>
+          <div class="protocol__body">
+            <p>Setup, integration, and adoption support that extracts real value from operations software — matched to your size, budget, and team.</p>
+            <ul class="protocol__rx mono">
+              <li>Platform audit and recommendation</li>
+              <li>Setup and configuration</li>
+              <li>Integration between key tools</li>
+              <li>Team training &amp; adoption plan</li>
+              <li>30-day support period</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+
+      <div class="dosage">
+        <span class="dosage__label mono">ENGAGEMENT DOSAGE</span>
+        <div class="dosage__grid">
+          <div class="dosage__card">
+            <span class="dosage__name">Diagnostic Consult</span>
+            <span class="dosage__price"><em>from</em> $500</span>
+            <span class="dosage__note mono">SINGLE FOCUSED ENGAGEMENT</span>
+          </div>
+          <div class="dosage__card dosage__card--featured">
+            <span class="dosage__name">Full Course</span>
+            <span class="dosage__price">$1,500–$5,000</span>
+            <span class="dosage__note mono">4–8 WEEKS, DIAGNOSIS → RECOVERY</span>
+          </div>
+          <div class="dosage__card">
+            <span class="dosage__name">Ongoing Care</span>
+            <span class="dosage__price"><em>from</em> $500<em>/mo</em></span>
+            <span class="dosage__note mono">RETAINER — VITALS MONITORED</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 04 / PRACTITIONER ══════════ -->
+    <section class="practitioner" id="practitioner" data-section="04">
+      <div class="practitioner__quote-wrap">
+        <blockquote class="practitioner__quote" data-split-lines>
+          <em>“Context</em> before prescription.<br/>Systems over <em>heroics.”</em>
+        </blockquote>
+      </div>
+      <div class="practitioner__grid">
+        <div class="practitioner__specimen" aria-hidden="true">
+          <canvas id="specimen-canvas" width="560" height="680"></canvas>
+          <span class="practitioner__specimen-cap mono">FIG. 01 — OPERATIONAL ANATOMY, HEALTHY STATE</span>
+        </div>
+        <div class="practitioner__bio">
+          <span class="section-head__num mono">04 — THE PRACTITIONER</span>
+          <h2 class="practitioner__name">Laura Smith</h2>
+          <p class="practitioner__role mono">FOUNDER &amp; PRINCIPAL CONSULTANT, PMP</p>
+          <p>
+            Laura spent over a decade inside operations — retail, e-commerce, AEC,
+            professional services — watching good businesses hurt in the same
+            predictable places. While working in e-commerce she acquired
+            <strong>OLDCARTS Watches</strong> as a personal learning lab: a real business
+            to run experiments on, so nobody else's had to be the guinea pig.
+          </p>
+          <p>
+            The surprise was the framework. The clinical mnemonic that named the
+            company proved more valuable for diagnosing <em>operations</em> than for
+            selling watches — and OLDCARTS Consulting was formalized around it.
+          </p>
+          <p>
+            The practice is built on three principles: <strong>diagnosis first</strong> —
+            context before prescription; <strong>systems over heroics</strong> — documented,
+            repeatable processes that don't depend on any one person, including us;
+            and <strong>right-sized solutions</strong> — built for real budgets and lean teams,
+            not enterprise theater.
+          </p>
+          <ul class="practitioner__creds mono" role="list">
+            <li>PROJECT MGMT PROFESSIONAL — PMP</li>
+            <li>PMI MEMBER SINCE 2019</li>
+            <li>10+ YRS OPERATIONS &amp; SYSTEMS</li>
+            <li>BASc — KSU COLES COLLEGE</li>
+            <li>GEORGIA REGISTERED LLC</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 05 / CONSULT ══════════ -->
+    <section class="consult" id="consult" data-section="05">
+      <canvas class="consult__canvas" id="consult-canvas" aria-hidden="true"></canvas>
+      <div class="consult__content">
+        <span class="section-head__num mono">05 — INTAKE IS OPEN</span>
+        <p class="consult__status mono"><i class="consult__blink"></i> STATUS: ACCEPTING NEW CLIENTS — RESPONSE WITHIN 24H</p>
+        <h2 class="consult__title" data-split-lines>
+          Begin the<br/><em>consultation.</em>
+        </h2>
+        <p class="consult__sub">A first conversation costs nothing and treats one symptom immediately: <em>not knowing where to start.</em></p>
+        <div class="consult__actions">
+          <a class="btn btn--solid btn--lg" href="mailto:laura.smith@oldcarts.com?subject=Consultation%20request" data-magnetic>laura.smith@oldcarts.com</a>
+          <a class="btn btn--ghost btn--lg" href="tel:+14046433404" data-magnetic>(404) 643-3404</a>
+        </div>
+        <p class="consult__geo mono">SERVING THE SOUTHEAST FROM WATKINSVILLE, GEORGIA — ON-SITE &amp; REMOTE</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__mark">
+        <span class="footer__word">OLDCARTS<sup>®</sup></span>
+        <span class="footer__tag mono">ONSET · LOCATION · DURATION · CHARACTER · AGGRAVATING · RELIEVING · TIMING · SEVERITY</span>
+      </div>
+      <nav class="footer__nav" aria-label="Footer">
+        <a href="#method">Method</a>
+        <a href="#care">Course of Care</a>
+        <a href="#protocols">Protocols</a>
+        <a href="#practitioner">Practitioner</a>
+        <a href="#consult">Consult</a>
+        <a href="/guide/">Site Guide</a>
+      </nav>
+    </div>
+    <div class="footer__bottom mono">
+      <span>© 2026 OLDCARTS CONSULTING LLC — WATKINSVILLE, GA</span>
+      <a href="/guide/" class="footer__credit">DESIGNED &amp; ENGINEERED BY CLAUDE — READ HOW ✚</a>
+    </div>
+  </footer>
+
+  <script type="importmap">{ "imports": { "three": "/vendor/three.module.min.js" } }</script>
+  <script src="/vendor/gsap.min.js" defer></script>
+  <script src="/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="/vendor/SplitText.min.js" defer></script>
+  <script src="/vendor/ScrambleTextPlugin.min.js" defer></script>
+  <script src="/vendor/lenis.min.js" defer></script>
+  <script type="module" src="/assets/js/main.js"></script>
+</body>
+</html>

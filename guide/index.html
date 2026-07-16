@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How This Site Was Made — OLDCARTS Consulting</title>
+  <meta name="description" content="A build guide for the OLDCARTS site rebuild: concept, palette, typography, WebGL particle system, animation architecture, iteration passes, and deployment — designed and engineered end-to-end by Claude." />
+  <meta name="theme-color" content="#F3EEE3" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="/assets/fonts/fraunces-latin-full-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/css/main.css" />
+  <style>
+    /* ── chart-paper inversion of the exam-room palette ── */
+    :root {
+      --paper: #F3EEE3;
+      --paper-2: #ECE5D6;
+      --ink-on-paper: #131A16;
+      --ink-soft: #4A544D;
+      --rule: rgba(19, 26, 22, 0.14);
+      --rule-soft: rgba(19, 26, 22, 0.07);
+    }
+    body.guide {
+      background: var(--paper);
+      color: var(--ink-on-paper);
+    }
+    body.guide::before {
+      background-image:
+        linear-gradient(var(--rule-soft) 1px, transparent 1px),
+        linear-gradient(90deg, var(--rule-soft) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: .55;
+      mask-image: none;
+    }
+    body.guide ::selection { background: var(--pulse); color: var(--paper); }
+
+    .g-hud {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 1rem var(--gutter);
+      background: color-mix(in srgb, var(--paper) 88%, transparent);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--font-mono); font-size: .68rem; letter-spacing: .14em;
+    }
+    .g-hud a { color: var(--ink-soft); transition: color .3s; }
+    .g-hud a:hover { color: var(--pulse); }
+    .g-hud__mark { display: inline-flex; align-items: center; gap: .6rem; color: var(--ink-on-paper) !important; }
+    .g-hud__mark svg { width: 28px; color: var(--pulse); }
+
+    .g-wrap { max-width: 46rem; margin-inline: auto; padding: 0 var(--gutter); }
+
+    .g-hero { padding: clamp(4rem, 10vh, 7rem) 0 clamp(3rem, 6vh, 4.5rem); }
+    .g-kicker {
+      font-family: var(--font-mono); font-size: .66rem; letter-spacing: .18em;
+      color: var(--pulse);
+      display: inline-block;
+      border: 1px solid color-mix(in srgb, var(--pulse) 40%, transparent);
+      border-radius: 999px; padding: .35rem .8rem;
+      margin-bottom: 1.6rem;
+    }
+    .g-title {
+      font-family: var(--font-display);
+      font-weight: 320;
+      font-size: clamp(2.4rem, 6.5vw, 4.4rem);
+      line-height: 1.02; letter-spacing: -0.03em;
+      font-variation-settings: 'opsz' 144;
+      margin-bottom: 1.4rem;
+    }
+    .g-title em { color: var(--pulse); font-variation-settings: 'opsz' 144, 'SOFT' 70; }
+    .g-lede { font-size: 1.15rem; color: var(--ink-soft); max-width: 38rem; line-height: 1.65; }
+    .g-lede strong { color: var(--ink-on-paper); }
+
+    .g-meta {
+      display: flex; flex-wrap: wrap; gap: .5rem;
+      margin-top: 2rem;
+      font-family: var(--font-mono); font-size: .58rem; letter-spacing: .12em;
+    }
+    .g-meta span { border: 1px solid var(--rule); border-radius: 999px; padding: .45rem .85rem; color: var(--ink-soft); }
+
+    .g-section { padding: 2.6rem 0; border-top: 1px solid var(--rule); }
+    .g-section__num { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .16em; color: var(--pulse); display: block; margin-bottom: 1rem; }
+    .g-section h2 {
+      font-family: var(--font-display); font-weight: 350;
+      font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+      letter-spacing: -0.02em; line-height: 1.12;
+      margin-bottom: 1.2rem;
+    }
+    .g-section h2 em { color: color-mix(in srgb, var(--sage) 60%, var(--ink-on-paper)); }
+    .g-section p { color: var(--ink-soft); margin-bottom: 1.1rem; line-height: 1.7; }
+    .g-section p strong { color: var(--ink-on-paper); font-weight: 600; }
+    .g-section a { color: var(--pulse); border-bottom: 1px solid color-mix(in srgb, var(--pulse) 40%, transparent); }
+
+    .g-swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: .6rem; margin: 1.6rem 0; }
+    .g-swatch { border-radius: 4px; border: 1px solid var(--rule); overflow: hidden; }
+    .g-swatch i { display: block; height: 72px; }
+    .g-swatch figcaption { font-family: var(--font-mono); font-size: .52rem; letter-spacing: .1em; padding: .55rem .6rem; color: var(--ink-soft); line-height: 1.7; }
+    @media (max-width: 620px) { .g-swatches { grid-template-columns: repeat(2, 1fr); } }
+
+    .g-code {
+      background: var(--ink); color: var(--bone);
+      border-radius: 6px; padding: 1.4rem 1.5rem;
+      font-family: var(--font-mono); font-size: .74rem; line-height: 1.75;
+      overflow-x: auto; margin: 1.5rem 0;
+      border: 1px solid rgba(19,26,22,.4);
+    }
+    .g-code .c { color: #6B776F; }
+    .g-code .k { color: #8FB8A5; }
+    .g-code .p { color: #FF5C42; }
+
+    .g-type-specimen { margin: 1.6rem 0; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+    .g-type-specimen > div { padding: 1.4rem 1.5rem; border-bottom: 1px solid var(--rule); }
+    .g-type-specimen > div:last-child { border-bottom: 0; }
+    .g-ts-fraunces { font-family: var(--font-display); font-size: clamp(1.8rem, 4.5vw, 2.8rem); font-weight: 320; letter-spacing: -0.025em; font-variation-settings: 'opsz' 144; }
+    .g-ts-fraunces em { font-variation-settings: 'opsz' 144, 'SOFT' 70, 'WONK' 1; color: var(--pulse); }
+    .g-ts-sans { font-family: var(--font-text); font-size: 1.05rem; color: var(--ink-soft); }
+    .g-ts-mono { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em; color: var(--ink-soft); }
+    .g-ts-label { font-family: var(--font-mono); font-size: .52rem; letter-spacing: .16em; color: var(--pulse); display: block; margin-bottom: .6rem; }
+
+    .g-steps { counter-reset: step; list-style: none; margin: 1.4rem 0; }
+    .g-steps li {
+      counter-increment: step;
+      position: relative;
+      padding: 1.1rem 0 1.1rem 3.2rem;
+      border-top: 1px dashed var(--rule);
+      color: var(--ink-soft); line-height: 1.65;
+    }
+    .g-steps li::before {
+      content: counter(step, decimal-leading-zero);
+      position: absolute; left: 0; top: 1.2rem;
+      font-family: var(--font-mono); font-size: .68rem; color: var(--pulse);
+    }
+    .g-steps li strong { color: var(--ink-on-paper); }
+
+    .g-footer {
+      margin-top: 3rem;
+      border-top: 1px solid var(--rule);
+      padding: 2.2rem 0 3rem;
+      display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+      font-family: var(--font-mono); font-size: .58rem; letter-spacing: .12em;
+      color: var(--ink-soft);
+    }
+    .g-footer a { color: var(--pulse); }
+    .g-back {
+      display: inline-flex; align-items: center; gap: .5rem;
+      margin-top: 2.4rem;
+      font-family: var(--font-mono); font-size: .68rem; letter-spacing: .14em;
+      color: var(--paper) !important; background: var(--ink-on-paper);
+      padding: .85rem 1.4rem; border-radius: 999px;
+      transition: background .3s;
+    }
+    .g-back:hover { background: var(--pulse); }
+  </style>
+</head>
+<body class="guide">
+
+  <header class="g-hud">
+    <a class="g-hud__mark" href="/">
+      <svg viewBox="0 0 34 14" aria-hidden="true"><path d="M0 7 H8 L11 7 L14 1 L18 13 L21 4 L23 7 H34" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+      OLDCARTS — SITE GUIDE
+    </a>
+    <a href="/">← BACK TO THE PRACTICE</a>
+  </header>
+
+  <main class="g-wrap">
+
+    <section class="g-hero">
+      <span class="g-kicker">✚ CASE NOTES — HOW THIS SITE WAS MADE</span>
+      <h1 class="g-title">Anatomy of <em>a rebuild.</em></h1>
+      <p class="g-lede">
+        This site was <strong>designed, written, engineered, reviewed, and deployed end-to-end by Claude</strong>
+        (Anthropic's AI), working autonomously from a single prompt as a demonstration of what
+        AI-driven web design can do. These are the case notes — concept to deployment — so you can run
+        the same play on your own project.
+      </p>
+      <div class="g-meta">
+        <span>STACK — VANILLA JS · THREE.JS · GSAP · LENIS</span>
+        <span>BUILD — NONE (STATIC)</span>
+        <span>HOST — NETLIFY VIA GITHUB</span>
+        <span>ITERATIONS — 3 REVIEW PASSES</span>
+      </div>
+    </section>
+
+    <section class="g-section">
+      <span class="g-section__num">01 — DIAGNOSIS FIRST (THE CONCEPT)</span>
+      <h2>The brand <em>is</em> the design brief.</h2>
+      <p>
+        OLDCARTS is a clinical mnemonic — Onset, Location, Duration, Character, Aggravating factors,
+        Relieving factors, Timing, Severity — that physicians use to characterize a symptom before
+        treating it. The firm applies that same discipline to small-business operations:
+        <strong>diagnosis before prescription.</strong>
+      </p>
+      <p>
+        So the site was designed as a <strong>diagnostic instrument</strong>: an examination room rendered in
+        editorial luxury. Every device on the page extends the metaphor — a heartbeat that paces the WebGL
+        particle "organism," an intake-to-recovery course of care drawn as an ECG, services written as
+        treatment protocols (RX–01 through RX–04), pricing as engagement dosage, vitals in the HUD.
+        A concept this specific makes a thousand small decisions for you. That's the first lesson:
+        <strong>don't decorate a brand — diagnose it.</strong>
+      </p>
+    </section>
+
+    <section class="g-section">
+      <span class="g-section__num">02 — PALETTE (EXAM ROOM, PORCELAIN, ARTERIAL)</span>
+      <h2>Four colors, strictly rationed.</h2>
+      <p>
+        A near-black with a green undertone reads as a dim examination room rather than generic
+        dark-mode gray. Bone is warmer than white — porcelain and paper, not screens. Coral is reserved
+        almost exclusively for the pulse: anything alive, urgent, or interactive. Sage is the counter-accent
+        for calm, secondary emphasis. This guide page runs the same palette inverted — chart paper instead
+        of the exam room.
+      </p>
+      <div class="g-swatches">
+        <figure class="g-swatch"><i style="background:#0A0F0D"></i><figcaption>INK<br/>#0A0F0D<br/>EXAM ROOM</figcaption></figure>
+        <figure class="g-swatch"><i style="background:#EDE7DB"></i><figcaption>BONE<br/>#EDE7DB<br/>PORCELAIN</figcaption></figure>
+        <figure class="g-swatch"><i style="background:#FF5C42"></i><figcaption>PULSE<br/>#FF5C42<br/>ARTERIAL</figcaption></figure>
+        <figure class="g-swatch"><i style="background:#8FB8A5"></i><figcaption>SAGE<br/>#8FB8A5<br/>SURGICAL</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="g-section">
+      <span class="g-section__num">03 — TYPOGRAPHY (VARIABLE AXES AS VOICE)</span>
+      <h2>Three families, <em>three registers.</em></h2>
+      <div class="g-type-specimen">
+        <div>
+          <span class="g-ts-label">FRAUNCES VARIABLE — DISPLAY / THE DIAGNOSIS</span>
+          <p class="g-ts-fraunces">Your business has <em>symptoms.</em></p>
+        </div>
+        <div>
+          <span class="g-ts-label">INSTRUMENT SANS — TEXT / THE EXPLANATION</span>
+          <p class="g-ts-sans">Consulting with a clinician's rigor — for small businesses that need systems, not heroics.</p>
+        </div>
+        <div>
+          <span class="g-ts-label">FRAGMENT MONO — LABELS / THE CHART</span>
+          <p class="g-ts-mono">REF 01 / ONSET — WATKINSVILLE, GA — 58 BPM ✚</p>
+        </div>
+      </div>
+      <p>
+        Fraunces is a variable font with four axes. Beyond weight and optical size, its
+        <strong>SOFT</strong> and <strong>WONK</strong> axes are used as a voice: key italic words render with
+        softened terminals and wonky alternates, so emphasis literally bends the letterforms
+        (<code class="g-ts-mono">font-variation-settings: 'opsz' 144, 'SOFT' 70, 'WONK' 1</code>).
+        Fragment Mono plays the clinical chart — every label, reference number, and readout.
+        All fonts are self-hosted woff2 with <code class="g-ts-mono">font-display: swap</code>.
+      </p>
+    </section>
+
+    <section class="g-section">
+      <span class="g-section__num">04 — THE ORGANISM (WEBGL / THREE.JS)</span>
+      <h2>~45,000 particles <em>with a resting heart rate.</em></h2>
+      <p>
+        The hero renders a single <strong>THREE.Points</strong> mesh: ~42k particles sampled on a sphere plus
+        ~2.6k ambient dust, displaced in a custom vertex shader by simplex noise so the surface breathes
+        like tissue. A JavaScript "beat clock" runs a lub-dub envelope at 58 BPM — two Gaussian pulses per
+        cycle — and feeds one uniform shared by <em>everything on the page</em>: the shader's systolic
+        expansion, the HUD beat dot, the ECG traces, even the specimen figure. One metronome, whole-page
+        coherence.
+      </p>
+      <div class="g-code"><span class="c">// the whole site keeps time with this</span>
+<span class="k">const</span> period = 60 / bpm;                  <span class="c">// 58 BPM resting</span>
+<span class="k">const</span> phase  = (time % period) / period;
+beat = <span class="p">gauss</span>(phase, .055, .022)           <span class="c">// lub</span>
+     + <span class="p">gauss</span>(phase, .240, .035) * 0.55;   <span class="c">// dub</span></div>
+      <p>
+        Pointer position is unprojected into the scene so the cursor <strong>palpates</strong> the organism —
+        particles yield around your hand. Scroll loosens and disperses it. Particle counts drop by two-thirds
+        on mobile, device-pixel-ratio is capped at 1.75, blending is additive with no depth writes, and the
+        render loop pauses when the tab hides. Reduced-motion visitors get a single still frame.
+      </p>
+    </section>
+
+    <section class="g-section">
+      <span class="g-section__num">05 — MOTION ARCHITECTURE</span>
+      <h2>Choreography, <em>not confetti.</em></h2>
+      <p>
+        GSAP + ScrollTrigger + SplitText handle choreography; Lenis supplies inertial scroll. The rules:
+        masked line/char reveals with <code class="g-ts-mono">power4.out</code> easing; one scroll-scrubbed
+        set piece (the course-of-care ECG draws its own trace as you scroll, lighting each stage as the
+        wavefront passes); ambient loops that are data, not decoration (live vitals, the auto-cycling
+        OLDCARTS instrument, a scroll-velocity-reactive marquee). Everything respects
+        <code class="g-ts-mono">prefers-reduced-motion</code>.
+      </p>
+      <p>
+        The signature interaction is the <strong>OLDCARTS instrument</strong>: eight flex-grow slats, one per
+        letter, that expand on hover like a specimen drawer opening — with a scan-line sweep and the letter's
+        Fraunces SOFT axis easing in. On mobile it degrades to an accordion, and it's fully keyboard-navigable.
+      </p>
+    </section>
+
+    <section class="g-section">
+      <span class="g-section__num">06 — GENERATIVE ASSETS (NO STOCK, NO IMAGES)</span>
+      <h2>Every visual is <em>computed.</em></h2>
+      <p>
+        There isn't a single raster image on this site. The hero organism is GPU particles; the four
+        protocol previews (workflow graph, vital bars, 90-day radar, system lattice) are procedural 2D-canvas
+        sketches that follow your cursor; the practitioner "specimen" — FIG. 01, an operational anatomy —
+        is a seeded generative drawing; the consult section is an oscilloscope that flatlines until you
+        approach and quickens when you hover the CTA. Generative assets weigh nothing, match the palette by
+        construction, and never pixelate.
+      </p>
+    </section>
+
+    <section class="g-section">
+      <span class="g-section__num">07 — ITERATION PASSES</span>
+      <h2>Three passes with <em>a fine-toothed comb.</em></h2>
+      <ol class="g-steps">
+        <li><strong>Pass one — structure &amp; failure modes.</strong> Full-page screenshots at 1440, 1024, 768 and 390px plus section-by-section review: overflow bugs, spacing rhythm off the 8px grid, contrast failures, orphaned words in display type, z-index collisions, canvas sizing on resize.</li>
+        <li><strong>Pass two — design opportunities.</strong> Where the page felt flat, complexity was added deliberately: the scan-line on active slats, scroll-velocity feeding the marquee, the beat clock unified across every canvas, richer HUD readouts, refined variable-font axes on emphasis words.</li>
+        <li><strong>Pass three — polish &amp; performance.</strong> Easing and stagger tuning, focus-visible states, aria labels and keyboard paths, Lighthouse-style checks (font preloads, DPR caps, rAF hygiene, paused offscreen canvases), copy line-breaks, and cross-viewport re-verification.</li>
+      </ol>
+    </section>
+
+    <section class="g-section">
+      <span class="g-section__num">08 — SHIPPING (GITHUB → NETLIFY)</span>
+      <h2>Static files, <em>zero build.</em></h2>
+      <p>
+        The site is plain HTML/CSS/JS with vendored libraries — no bundler, no framework, no build step.
+        The repo is pushed to GitHub and connected to Netlify, which serves it from a global CDN.
+        <code class="g-ts-mono">/guide/index.html</code> gives this page its clean route; a
+        <code class="g-ts-mono">netlify.toml</code> adds long-cache headers for fonts and vendor files
+        and security headers for everything else.
+      </p>
+      <ol class="g-steps">
+        <li><strong>Research the brand</strong> until the concept writes itself — diagnosis before prescription.</li>
+        <li><strong>Set the system first:</strong> tokens for palette, type, spacing; then never improvise outside it.</li>
+        <li><strong>Build the signature piece early</strong> (here, the instrument + organism) — everything else supports it.</li>
+        <li><strong>Iterate in passes, not dribbles:</strong> screenshot everything, list every flaw, fix, repeat ×3.</li>
+        <li><strong>Ship static:</strong> push to GitHub, import in Netlify, done. Performance is a feature of restraint.</li>
+      </ol>
+      <a class="g-back" href="/">← RETURN TO THE EXAMINATION ROOM</a>
+    </section>
+
+    <footer class="g-footer">
+      <span>© 2026 OLDCARTS CONSULTING LLC</span>
+      <span>DESIGNED &amp; ENGINEERED BY <a href="https://claude.com" rel="noopener">CLAUDE</a> — JULY 2026</span>
+    </footer>
+
+  </main>
+</body>
+</html>
