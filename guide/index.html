@@ -161,6 +161,21 @@
     }
     .g-back:hover { background: var(--pulse); }
   </style>
+  <!-- GA4 — deferred so analytics never competes with first paint -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VL294SE3MP', { anonymize_ip: true });
+    addEventListener('load', function () {
+      setTimeout(function () {
+        var s = document.createElement('script');
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-VL294SE3MP';
+        s.async = true;
+        document.head.appendChild(s);
+      }, 1500);
+    });
+  </script>
 </head>
 <body class="guide">
 
