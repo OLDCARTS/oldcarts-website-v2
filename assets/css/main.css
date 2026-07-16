@@ -525,7 +525,7 @@ section { padding: clamp(6rem, 12vh, 10rem) var(--gutter); position: relative; }
 .slat__term {
   writing-mode: vertical-rl;
   font-size: .6rem; letter-spacing: .3em;
-  color: color-mix(in srgb, var(--bone-dim) 55%, transparent);
+  color: var(--bone-dim);
 }
 .slat__body {
   position: absolute; inset: 0 0 0 5.5rem;
@@ -621,8 +621,13 @@ section { padding: clamp(6rem, 12vh, 10rem) var(--gutter); position: relative; }
   gap: clamp(1rem, 2.5vw, 2.5rem);
   padding-top: clamp(140px, 20vw, 250px);
 }
-.care__stage { position: relative; opacity: .3; transition: opacity .5s; }
-.care__stage.is-lit { opacity: 1; }
+/* unlit stages dim without failing WCAG contrast: headings/copy stay ≥4.5:1 */
+.care__stage { position: relative; }
+.care__stage h3 { opacity: .62; transition: opacity .5s; }
+.care__stage p { opacity: .8; transition: opacity .5s; }
+.care__stage .care__node, .care__stage .care__num { transition: opacity .5s; opacity: .85; }
+.care__stage.is-lit h3, .care__stage.is-lit p,
+.care__stage.is-lit .care__num, .care__stage.is-lit .care__node { opacity: 1; }
 .care__node {
   position: absolute; top: calc(-1 * clamp(28px, 4vw, 45px)); left: 0;
   width: 9px; height: 9px; border-radius: 50%;

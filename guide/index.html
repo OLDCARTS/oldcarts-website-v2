@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>How This Site Was Made — OLDCARTS Consulting</title>
   <meta name="description" content="A build guide for the OLDCARTS site rebuild: concept, palette, typography, WebGL particle system, animation architecture, iteration passes, and deployment — designed and engineered end-to-end by Claude." />
+  <link rel="canonical" href="https://oldcarts.com/guide/" />
+  <meta property="og:title" content="How This Site Was Made — OLDCARTS Consulting" />
+  <meta property="og:description" content="Anatomy of a rebuild: concept, palette, variable typography, a WebGL organism with a resting heart rate, motion architecture, three iteration passes, and zero-build deployment — by Claude." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://oldcarts.com/guide/" />
+  <meta property="og:image" content="https://oldcarts.com/assets/img/og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="theme-color" content="#F3EEE3" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preload" href="/assets/fonts/fraunces-latin-full-normal.woff2" as="font" type="font/woff2" crossorigin />
@@ -19,6 +26,10 @@
       --rule: rgba(19, 26, 22, 0.14);
       --rule-soft: rgba(19, 26, 22, 0.07);
     }
+    /* arterial coral is darkened on chart paper to hold WCAG AA contrast */
+    body.guide { --pulse: #BE3418; --pulse-dim: rgba(190, 52, 24, 0.4); }
+    body.guide .g-section a,
+    body.guide .g-footer a { text-decoration: underline; text-underline-offset: 3px; }
     body.guide {
       background: var(--paper);
       color: var(--ink-on-paper);
@@ -103,7 +114,7 @@
       overflow-x: auto; margin: 1.5rem 0;
       border: 1px solid rgba(19,26,22,.4);
     }
-    .g-code .c { color: #6B776F; }
+    .g-code .c { color: #8A968D; }
     .g-code .k { color: #8FB8A5; }
     .g-code .p { color: #FF5C42; }
 

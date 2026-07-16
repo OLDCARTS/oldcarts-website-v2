@@ -5,9 +5,11 @@
    instrument, ECG course-of-care, protocol previews,
    generative specimen, consult oscilloscope, magnetic buttons.
    ═══════════════════════════════════════════════════════════ */
-import { createHeroScene } from './hero3d.js';
-
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* on slow devices/connections the page has already been blank too long —
+   skip the theatrical intro and show content immediately */
+const slowStart = performance.now() > 2200;
+const skipIntro = reducedMotion || slowStart;
 const isTouch = matchMedia('(hover: none), (pointer: coarse)').matches;
 const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => [...c.querySelectorAll(s)];
@@ -70,9 +72,15 @@ const pctEl = $('#preloader-pct');
 const trace = $('#preloader-trace');
 
 const heroSplits = $$('.hero__line').map(
-  (line) => new SplitText(line, { type: 'chars', charsClass: 'chr' })
+  (line) => new SplitText(line, { type: 'chars', charsClass: 'chr', aria: 'none' })
 );
 heroSplits.forEach((s) => gsap.set(s.chars, { yPercent: 118, rotate: 3 }));
+/* accessible name lives on the h1 (valid role); visual chars are hidden from SR */
+const heroTitle = $('.hero__title');
+if (heroTitle) {
+  heroTitle.setAttribute('aria-label', 'Your business has symptoms. We diagnose them.');
+  $$('.hero__line', heroTitle).forEach((l) => l.setAttribute('aria-hidden', 'true'));
+}
 
 function intro() {
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -111,8 +119,9 @@ function intro() {
   }
 }
 
-if (reducedMotion) {
+if (skipIntro) {
   gsap.set(preloader, { display: 'none' });
+  preloader.remove();
   heroSplits.forEach((s) => gsap.set(s.chars, { yPercent: 0, rotate: 0 }));
   gsap.set('[data-reveal]', { opacity: 1, translate: '0 0' });
   document.body.classList.remove('js');
@@ -125,11 +134,11 @@ if (reducedMotion) {
   gsap.timeline()
     .to(load, {
       p: 100,
-      duration: 1.5,
+      duration: 1.05,
       ease: 'power2.inOut',
       onUpdate: () => (pctEl.textContent = String(Math.round(load.p)).padStart(2, '0')),
     })
-    .to(trace, { strokeDashoffset: 0, duration: 1.5, ease: 'power2.inOut' }, 0)
+    .to(trace, { strokeDashoffset: 0, duration: 1.05, ease: 'power2.inOut' }, 0)
     .add(intro, '-=0.15');
 }
 
@@ -234,20 +243,35 @@ menuBtn?.addEventListener('click', () => {
    HERO 3D + scroll link
    ─────────────────────────────────────────────────────────── */
 const heroCanvas = $('#hero-canvas');
-let heroScene = null;
-try {
-  heroScene = createHeroScene({ canvas: heroCanvas, beatClock, reducedMotion });
-} catch (err) {
-  console.warn('[oldcarts] WebGL unavailable, hero falls back to vignette', err);
-  heroCanvas.style.display = 'none';
+function webglAvailable() {
+  try {
+    const c = document.createElement('canvas');
+    return !!(c.getContext('webgl2') || c.getContext('webgl'));
+  } catch { return false; }
 }
-if (heroScene) {
-  ScrollTrigger.create({
-    trigger: '.hero',
-    start: 'top top',
-    end: 'bottom top',
-    onUpdate: (self) => heroScene.setScroll(self.progress),
-  });
+if (heroCanvas && webglAvailable()) {
+  /* lazy-boot the 3D scene off the critical path — the page is fully
+     usable before three.js is even parsed */
+  const bootHero = () =>
+    import('./hero3d.js')
+      .then((m) => {
+        const heroScene = m.createHeroScene({ canvas: heroCanvas, beatClock, reducedMotion });
+        ScrollTrigger.create({
+          trigger: '.hero',
+          start: 'top top',
+          end: 'bottom top',
+          onUpdate: (self) => heroScene.setScroll(self.progress),
+        });
+        gsap.fromTo(heroCanvas, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' });
+      })
+      .catch((err) => {
+        console.warn('[oldcarts] hero scene unavailable, falling back to vignette', err);
+        heroCanvas.style.display = 'none';
+      });
+  if ('requestIdleCallback' in window) requestIdleCallback(bootHero, { timeout: 2500 });
+  else setTimeout(bootHero, 400);
+} else if (heroCanvas) {
+  heroCanvas.style.display = 'none';
 }
 
 /* ───────────────────────────────────────────────────────────
@@ -266,7 +290,7 @@ $$('[data-reveal]').forEach((el) => {
 
 if (!reducedMotion) {
   $$('[data-split-lines]').forEach((el) => {
-    const split = new SplitText(el, { type: 'lines', linesClass: 'sline' });
+    const split = new SplitText(el, { type: 'lines', linesClass: 'sline', aria: 'none' });
     split.lines.forEach((l) => {
       const wrap = document.createElement('span');
       wrap.style.cssText = 'display:block;overflow:hidden;';
