@@ -293,7 +293,8 @@ if (!reducedMotion) {
     const split = new SplitText(el, { type: 'lines', linesClass: 'sline', aria: 'none' });
     split.lines.forEach((l) => {
       const wrap = document.createElement('span');
-      wrap.style.cssText = 'display:block;overflow:hidden;';
+      /* padding/negative-margin keeps descenders visible inside the mask */
+      wrap.style.cssText = 'display:block;overflow:hidden;padding-bottom:.14em;margin-bottom:-.14em;';
       l.parentNode.insertBefore(wrap, l);
       wrap.appendChild(l);
       l.style.display = 'block';

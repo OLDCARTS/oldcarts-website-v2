@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 380" fill="none" aria-hidden="true">
+  <!-- OLDCARTS Consulting trademark — reflex hammer in a lozenge -->
+  <path d="M100 8 L192 190 L100 372 L8 190 Z" stroke="currentColor" stroke-width="7" stroke-linejoin="miter"/>
+  <!-- hammer head: tilted, weighted toward the right point -->
+  <path fill="currentColor" d="M70 146
+    C60 128 72 106 98 100
+    C124 94 148 100 154 116
+    C160 132 150 152 128 162
+    C106 172 80 166 70 146 Z"/>
+  <!-- head highlight -->
+  <path d="M82 122 C88 113 99 108 110 107" stroke="var(--mark-bg, #0A0F0D)" stroke-width="7" stroke-linecap="round"/>
+  <!-- handle: thick, near-vertical, flared comma foot -->
+  <path fill="currentColor" d="M97 164
+    L115 158
+    C118 198 117 246 115 286
+    C114 306 119 316 114 328
+    C108 342 90 340 90 326
+    C90 312 97 300 98 280
+    C100 244 99 202 97 164 Z"/>
+  <!-- letters -->
+  <text x="47" y="204" font-family="Fraunces, Georgia, serif" font-size="34" fill="currentColor" text-anchor="middle">O</text>
+  <text x="153" y="204" font-family="Fraunces, Georgia, serif" font-size="34" fill="currentColor" text-anchor="middle">C</text>
+</svg>

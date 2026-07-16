@@ -388,7 +388,11 @@ section { padding: clamp(6rem, 12vh, 10rem) var(--gutter); position: relative; }
   font-variation-settings: 'opsz' 144;
   margin-bottom: 2.2rem;
 }
-.hero__line { display: block; overflow: hidden; }
+.hero__line {
+  display: block; overflow: hidden;
+  /* room for Fraunces descenders inside the reveal mask */
+  padding-bottom: .14em; margin-bottom: -.14em;
+}
 .hero__line--answer em { color: var(--sage); font-weight: 340; }
 .hero__title .wonk { font-variation-settings: 'opsz' 144, 'WONK' 1, 'SOFT' 40; }
 .pulse-dot { color: var(--pulse); font-style: normal; }
@@ -879,6 +883,13 @@ section { padding: clamp(6rem, 12vh, 10rem) var(--gutter); position: relative; }
   padding-bottom: 2.5rem; margin-bottom: 1.6rem;
   border-bottom: 1px solid var(--line-soft);
 }
+.footer__mark { display: flex; align-items: center; gap: 1.5rem; }
+.footer__oc {
+  height: 84px; width: auto; flex: none;
+  color: var(--bone);
+  transition: color .5s;
+}
+.footer__mark:hover .footer__oc { color: var(--pulse); }
 .footer__word { font-family: var(--font-display); font-size: 2rem; font-weight: 350; letter-spacing: -0.01em; display: block; }
 .footer__word sup { font-size: .4em; }
 .footer__tag { display: block; margin-top: .8rem; color: var(--bone-dim); font-size: .55rem; letter-spacing: .12em; max-width: 34rem; line-height: 2; }
