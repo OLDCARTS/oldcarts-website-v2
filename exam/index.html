@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The OLDCARTS Exam — A 90-Second Business Diagnosis</title>
+  <meta name="description" content="Eight clinical questions, applied to your business. An educational, interactive diagnosis built on the OLDCARTS method — leave with a findings report and possibly a condition you've been avoiding." />
+  <link rel="canonical" href="https://oldcarts.com/exam/" />
+  <meta property="og:title" content="The OLDCARTS Exam — Diagnose Your Business in 90 Seconds" />
+  <meta property="og:description" content="Eight clinical questions. One findings report. An interactive, educational diagnosis built on the OLDCARTS method." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://oldcarts.com/exam/" />
+  <meta property="og:image" content="https://oldcarts.com/assets/img/og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#0A0F0D" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="/assets/fonts/fraunces-latin-full-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/fraunces-latin-full-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/fragment-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/css/main.css" />
+  <style>
+    /* ══ THE EXAM — exam-room instrument, single-screen flow ══ */
+    body.exam-page { overflow-x: clip; }
+
+    .ex-hud {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 0 var(--gutter); height: var(--hud-h);
+      border-bottom: 1px solid var(--line-soft);
+      background: color-mix(in srgb, var(--ink) 85%, transparent);
+      backdrop-filter: blur(12px);
+      font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em;
+    }
+    .ex-hud__back { display: inline-flex; align-items: center; gap: .6rem; color: var(--bone-dim); transition: color .3s; }
+    .ex-hud__back:hover { color: var(--pulse); }
+    .ex-hud__back svg { width: 28px; color: var(--pulse); }
+    .ex-hud__title { color: var(--bone); }
+    .ex-hud__vitals { margin-left: auto; display: flex; align-items: center; gap: 1.2rem; color: var(--bone-dim); }
+    .ex-hud__bpm { color: var(--pulse); }
+    #ex-ecg { display: block; }
+    @media (max-width: 640px) { #ex-ecg { display: none; } .ex-hud { gap: .9rem; } }
+
+    /* progress strip */
+    .ex-progress {
+      position: fixed; top: var(--hud-h); left: 0; right: 0; z-index: 49;
+      display: flex; justify-content: center; gap: clamp(.6rem, 2.5vw, 1.6rem);
+      padding: .85rem var(--gutter);
+      background: color-mix(in srgb, var(--ink) 85%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line-soft);
+      font-family: var(--font-display); font-weight: 400;
+      font-size: clamp(.9rem, 2.4vw, 1.15rem);
+    }
+    .ex-progress span {
+      color: color-mix(in srgb, var(--bone-dim) 40%, transparent);
+      transition: color .4s, transform .4s;
+    }
+    .ex-progress span.is-current { color: var(--bone); transform: translateY(-2px); }
+    .ex-progress span.is-done { color: var(--pulse); }
+
+    /* stage */
+    .ex-main {
+      min-height: 100svh;
+      display: grid; place-items: center;
+      padding: calc(var(--hud-h) + 5.5rem) var(--gutter) 4rem;
+    }
+    .ex-card { width: min(46rem, 100%); }
+
+    .ex-kicker {
+      display: inline-block;
+      font-family: var(--font-mono); font-size: .62rem; letter-spacing: .18em;
+      color: var(--pulse);
+      border: 1px solid var(--pulse-dim); border-radius: 999px;
+      padding: .35rem .8rem; margin-bottom: 1.6rem;
+    }
+    .ex-title {
+      font-family: var(--font-display); font-weight: 310;
+      font-size: clamp(2.6rem, 7vw, 4.8rem);
+      line-height: 1.0; letter-spacing: -0.03em;
+      font-variation-settings: 'opsz' 144;
+      margin-bottom: 1.4rem;
+    }
+    .ex-title em { color: var(--sage); font-variation-settings: 'opsz' 144, 'SOFT' 60; }
+    .ex-lede { color: var(--bone-dim); max-width: 36rem; line-height: 1.7; margin-bottom: 1.1rem; }
+    .ex-lede em { color: var(--bone); }
+    .ex-fine { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .12em; color: var(--bone-dim); margin: 1.6rem 0 2.2rem; }
+    .ex-fine i { font-style: normal; color: var(--sage); }
+
+    /* question */
+    .ex-q__letterrow { display: flex; align-items: baseline; gap: 1.1rem; margin-bottom: 1.1rem; }
+    .ex-q__letter {
+      font-family: var(--font-display); font-weight: 300; font-style: italic;
+      font-size: clamp(3.4rem, 9vw, 5.8rem); line-height: .9;
+      color: var(--pulse);
+      font-variation-settings: 'opsz' 144, 'SOFT' 80;
+    }
+    .ex-q__term { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .22em; color: var(--bone-dim); }
+    .ex-q__ref { margin-left: auto; font-family: var(--font-mono); font-size: .58rem; letter-spacing: .16em; color: color-mix(in srgb, var(--bone-dim) 55%, transparent); }
+    .ex-q__question {
+      font-family: var(--font-display); font-weight: 330;
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      letter-spacing: -0.02em; line-height: 1.12;
+      margin-bottom: 2rem;
+    }
+    .ex-opts { display: grid; gap: .7rem; }
+    .ex-opt {
+      text-align: left;
+      background: var(--ink-2);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--bone);
+      font-family: var(--font-text); font-size: 1.02rem; font-weight: 450;
+      padding: 1.05rem 1.2rem 1.05rem 3.1rem;
+      position: relative;
+      cursor: pointer;
+      transition: border-color .25s, background-color .25s, transform .15s;
+    }
+    .ex-opt:hover, .ex-opt:focus-visible { border-color: var(--pulse); background: var(--ink-3); transform: translateX(4px); }
+    .ex-opt::before {
+      content: attr(data-key);
+      position: absolute; left: 1.05rem; top: 50%; translate: 0 -50%;
+      font-family: var(--font-mono); font-size: .62rem; color: var(--pulse);
+      border: 1px solid var(--pulse-dim); border-radius: 4px;
+      width: 1.35rem; height: 1.35rem; display: grid; place-items: center;
+    }
+    .ex-opt.is-picked { border-color: var(--pulse); background: color-mix(in srgb, var(--ink-3) 88%, var(--pulse)); }
+
+    /* severity slider */
+    .ex-sev { margin: 1rem 0 2rem; }
+    .ex-sev__readout {
+      font-family: var(--font-display); font-weight: 300;
+      font-size: clamp(4rem, 12vw, 7rem); line-height: 1;
+      color: var(--bone);
+      font-variation-settings: 'opsz' 144;
+      display: flex; align-items: baseline; gap: .8rem;
+      margin-bottom: 1.4rem;
+    }
+    .ex-sev__readout small { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .16em; color: var(--bone-dim); }
+    input[type="range"].ex-sev__slider {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 2px; border-radius: 2px;
+      background: linear-gradient(90deg, var(--sage), var(--pulse));
+      outline-offset: 8px;
+    }
+    .ex-sev__slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--bone); border: 2px solid var(--ink);
+      box-shadow: 0 0 0 2px var(--pulse), 0 0 18px var(--pulse-dim);
+      cursor: grab;
+    }
+    .ex-sev__slider::-moz-range-thumb {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--bone); border: 2px solid var(--ink);
+      box-shadow: 0 0 0 2px var(--pulse), 0 0 18px var(--pulse-dim);
+      cursor: grab;
+    }
+    .ex-sev__scale { display: flex; justify-content: space-between; margin-top: .8rem; font-family: var(--font-mono); font-size: .55rem; letter-spacing: .12em; color: var(--bone-dim); }
+
+    /* report */
+    .ex-report {
+      border: 1px solid var(--line); border-radius: 6px;
+      background: var(--ink-2);
+      padding: clamp(1.6rem, 4vw, 2.8rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .ex-report::before {
+      content: ''; position: absolute; inset: 10px;
+      border: 1px dashed var(--line-soft); border-radius: 3px;
+      pointer-events: none;
+    }
+    .ex-report__head { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-family: var(--font-mono); font-size: .58rem; letter-spacing: .14em; color: var(--bone-dim); margin-bottom: 1.8rem; }
+    .ex-report__dx-label { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .18em; color: var(--pulse); display: block; margin-bottom: .8rem; }
+    .ex-report__dx {
+      font-family: var(--font-display); font-weight: 320;
+      font-size: clamp(1.9rem, 5vw, 3.1rem);
+      line-height: 1.05; letter-spacing: -0.025em;
+      margin-bottom: .5rem;
+    }
+    .ex-report__sev { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .16em; color: var(--sage); margin-bottom: 1.8rem; display: block; }
+    .ex-report__sev i { font-style: normal; color: var(--pulse); }
+    .ex-report h3 { font-family: var(--font-mono); font-weight: 400; font-size: .62rem; letter-spacing: .18em; color: var(--bone-dim); margin: 1.6rem 0 .6rem; }
+    .ex-report p { color: var(--bone-dim); line-height: 1.7; max-width: 40rem; }
+    .ex-report p strong { color: var(--bone); font-weight: 560; }
+    .ex-report__rx { border-left: 2px solid var(--pulse); padding-left: 1.1rem; }
+    .ex-report__foot { margin-top: 2rem; padding-top: 1.4rem; border-top: 1px solid var(--line-soft); font-family: var(--font-mono); font-size: .55rem; letter-spacing: .12em; color: color-mix(in srgb, var(--bone-dim) 70%, transparent); line-height: 1.9; }
+    .ex-actions { display: flex; gap: .9rem; flex-wrap: wrap; margin-top: 2rem; }
+    .ex-copied { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .14em; color: var(--sage); align-self: center; opacity: 0; transition: opacity .3s; }
+    .ex-copied.is-on { opacity: 1; }
+
+    /* transitions */
+    .ex-view { will-change: transform, opacity; }
+    @media (prefers-reduced-motion: reduce) { .ex-opt { transition: none; } }
+  </style>
+</head>
+<body class="exam-page" data-theme="exam-room">
+  <script>document.body.classList.add('js');</script>
+  <a class="skip-link" href="#ex-stage">Skip to content</a>
+
+  <header class="ex-hud">
+    <a class="ex-hud__back" href="/">
+      <svg viewBox="0 0 34 14" aria-hidden="true"><path d="M0 7 H8 L11 7 L14 1 L18 13 L21 4 L23 7 H34" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+      ← THE PRACTICE
+    </a>
+    <span class="ex-hud__title">THE OLDCARTS EXAM</span>
+    <div class="ex-hud__vitals" aria-hidden="true">
+      <canvas id="ex-ecg" width="150" height="26"></canvas>
+      <span class="ex-hud__bpm"><span id="ex-bpm">58</span> BPM</span>
+    </div>
+  </header>
+
+  <div class="ex-progress" id="ex-progress" aria-hidden="true">
+    <span>O</span><span>L</span><span>D</span><span>C</span><span>A</span><span>R</span><span>T</span><span>S</span>
+  </div>
+
+  <main class="ex-main" id="ex-stage">
+    <div class="ex-card">
+      <div class="ex-view" id="ex-view">
+        <!-- intro rendered by JS; static fallback for no-JS -->
+        <noscript>
+          <h1 class="ex-title">The exam requires JavaScript.</h1>
+          <p class="ex-lede">No script, no diagnosis — but the method still works the old-fashioned way. <a href="/#method" style="color:var(--pulse)">Read the eight questions</a> or <a href="mailto:laura.smith@oldcarts.com" style="color:var(--pulse)">book the real thing</a>.</p>
+        </noscript>
+      </div>
+    </div>
+  </main>
+
+  <script src="/vendor/gsap.min.js" defer></script>
+  <script src="/assets/js/exam.js" defer></script>
+  <!-- GA4 — deferred so analytics never competes with first paint -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VL294SE3MP', { anonymize_ip: true });
+    addEventListener('load', function () {
+      setTimeout(function () {
+        var s = document.createElement('script');
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-VL294SE3MP';
+        s.async = true;
+        document.head.appendChild(s);
+      }, 1500);
+    });
+  </script>
+</body>
+</html>

@@ -598,6 +598,17 @@ section { padding: clamp(6rem, 12vh, 10rem) var(--gutter); position: relative; }
   .slat.is-active::after { display: none; }
 }
 
+.method__exam { margin-top: 1.6rem; text-align: right; }
+.method__exam a {
+  font-size: .64rem; letter-spacing: .16em;
+  color: var(--bone-dim);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: .3rem;
+  transition: color .3s, border-color .3s;
+}
+.method__exam a:hover { color: var(--pulse); border-color: var(--pulse); }
+.method__exam .tick { color: var(--pulse); margin-right: .5em; }
+
 /* ═══════════════════════════════════════════════════════════
    02 — COURSE OF CARE
    ═══════════════════════════════════════════════════════════ */
