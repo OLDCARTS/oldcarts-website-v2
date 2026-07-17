@@ -281,7 +281,7 @@
         <p class="ex-report__rx"><strong>${d.primary.rx}.</strong> ${d.primary.rxDetail}</p>
         <div class="ex-report__foot">
           THIS EXAMINATION IS EDUCATIONAL, NOT A SUBSTITUTE FOR PROFESSIONAL CONSULTATION.<br/>
-          FORTUNATELY, WE KNOW A PRACTITIONER — LAURA SMITH, PMP · WATKINSVILLE, GA
+          FORTUNATELY, WE KNOW A PRACTITIONER — LAURA SMITH · WATKINSVILLE, GA
         </div>
       </div>
       <div class="ex-actions">
