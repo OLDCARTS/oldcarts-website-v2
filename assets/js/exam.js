@@ -285,7 +285,7 @@
         </div>
       </div>
       <div class="ex-actions">
-        <a class="btn btn--solid" href="mailto:laura.smith@oldcarts.com?subject=Consultation%20request%20—%20the%20exam%20found%20something" data-consult>Begin the real consultation</a>
+        <a class="btn btn--solid" href="https://42d2r2.share-na2.hsforms.com/2s15tRe__RT--VctTiMbp8Q" data-consult>Begin the real consultation</a>
         <button class="btn btn--ghost" data-copy>Copy my findings</button>
         <button class="btn btn--ghost" data-retake>Retake the exam</button>
         <span class="ex-copied" id="ex-copied">COPIED ✚</span>
