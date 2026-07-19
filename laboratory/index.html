@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OLDCARTS Laboratory — Public Experiments in Autonomous AI</title>
+  <meta name="description" content="The research wing of OLDCARTS Consulting: public, governed experiments in autonomous AI. Experiment 001 — Anne Ledger — is live: 90 days, a $400 budget, a full public ledger, and 15% of gross revenue to the National Organization for Rare Disorders (NORD)." />
+  <link rel="canonical" href="https://oldcarts.com/laboratory/" />
+  <meta property="og:title" content="OLDCARTS Laboratory — Public Experiments in Autonomous AI" />
+  <meta property="og:description" content="We test governance, autonomy, and transparency on ourselves before we recommend them to anyone. Experiment 001 is live." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://oldcarts.com/laboratory/" />
+  <meta property="og:image" content="https://oldcarts.com/assets/img/og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#0A0F0D" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="/assets/fonts/fraunces-latin-full-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/fraunces-latin-full-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/fragment-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/css/main.css" />
+  <style>
+    /* ══ THE LABORATORY — the spectacle wing; experiments are the evidence ══ */
+    body.lab-page { overflow-x: clip; }
+
+    .lab-hud {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 0 var(--gutter); height: var(--hud-h);
+      border-bottom: 1px solid var(--line-soft);
+      background: color-mix(in srgb, var(--ink) 85%, transparent);
+      backdrop-filter: blur(12px);
+      font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em;
+    }
+    .lab-hud__back { display: inline-flex; align-items: center; gap: .6rem; color: var(--bone-dim); transition: color .3s; }
+    .lab-hud__back:hover { color: var(--pulse); }
+    .lab-hud__back svg { width: 28px; color: var(--pulse); }
+    .lab-hud__title { color: var(--bone); }
+    .lab-hud__status { margin-left: auto; color: var(--bone-dim); display: flex; gap: 1.4rem; }
+    .lab-hud__status i { font-style: normal; color: var(--sage); }
+    .lab-hud__status .live { color: var(--pulse); }
+    @media (max-width: 720px) { .lab-hud__status { display: none; } }
+
+    .lab-canvas { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; }
+
+    /* hero */
+    .lab-hero {
+      min-height: 88svh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding-top: calc(var(--hud-h) + 3rem);
+    }
+    .lab-hero__eyebrow { color: var(--bone-dim); font-size: .66rem; margin-bottom: 2rem; }
+    .lab-hero__eyebrow .tick { color: var(--pulse); margin-right: .6em; }
+    .lab-hero__title {
+      font-family: var(--font-display); font-weight: 300;
+      font-size: clamp(3.2rem, 11vw, 9.5rem);
+      line-height: .95; letter-spacing: -0.035em;
+      font-variation-settings: 'opsz' 144;
+      margin-bottom: 2rem;
+    }
+    .lab-hero__title em { color: var(--sage); font-variation-settings: 'opsz' 144, 'SOFT' 70; }
+    .lab-hero__title .wonk { font-variation-settings: 'opsz' 144, 'WONK' 1, 'SOFT' 40; }
+    .lab-hero__sub { max-width: 38rem; color: var(--bone-dim); font-size: clamp(1.02rem, 1.4vw, 1.2rem); }
+    .lab-hero__sub em { color: var(--bone); }
+    .lab-hero__readouts {
+      display: flex; gap: clamp(1.5rem, 4vw, 3.5rem); flex-wrap: wrap;
+      margin-top: 3rem; padding-top: 1.4rem;
+      border-top: 1px solid var(--line-soft);
+      font-family: var(--font-mono); font-size: .6rem; letter-spacing: .14em;
+      color: var(--bone-dim);
+    }
+    .lab-hero__readouts b { display: block; font-weight: 400; color: var(--bone); font-size: .95rem; margin-top: .45rem; }
+    .lab-hero__readouts .live b { color: var(--pulse); }
+
+    /* manifesto */
+    .lab-manifesto { max-width: 60rem; }
+    .lab-manifesto__quote {
+      font-family: var(--font-display); font-weight: 320;
+      font-size: clamp(1.8rem, 4.2vw, 3.2rem);
+      line-height: 1.15; letter-spacing: -0.025em;
+      margin-bottom: 1.8rem;
+    }
+    .lab-manifesto__quote em { color: var(--pulse); font-variation-settings: 'SOFT' 60; }
+    .lab-manifesto p { color: var(--bone-dim); max-width: 42rem; margin-bottom: 1.1rem; }
+    .lab-manifesto p strong { color: var(--bone); font-weight: 560; }
+
+    /* experiment grid */
+    .lab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(30rem, 100%), 1fr));
+      gap: clamp(1.5rem, 3vw, 2.5rem);
+      align-items: stretch;
+    }
+
+    /* containment frame around the austere card — the contrast moment */
+    .containment {
+      position: relative;
+      padding: clamp(1.6rem, 4vw, 3rem);
+      padding-bottom: 3.6rem;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background:
+        radial-gradient(ellipse 90% 80% at 50% 0%, rgba(143,184,165,.05), transparent 60%),
+        var(--ink-2);
+      overflow: hidden;
+    }
+    .containment::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 47%, rgba(255,92,66,.04) 50%, transparent 53%);
+      background-size: 100% 300%;
+      animation: labscan 4.5s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes labscan { 0% { background-position: 0 130%; } 100% { background-position: 0 -30%; } }
+    .containment__ticks i {
+      position: absolute; width: 15px; height: 15px;
+      border-color: var(--pulse-dim); border-style: solid;
+    }
+    .containment__ticks i:nth-child(1) { top: 9px; left: 9px; border-width: 1.5px 0 0 1.5px; }
+    .containment__ticks i:nth-child(2) { top: 9px; right: 9px; border-width: 1.5px 1.5px 0 0; }
+    .containment__ticks i:nth-child(3) { bottom: 9px; left: 9px; border-width: 0 0 1.5px 1.5px; }
+    .containment__ticks i:nth-child(4) { bottom: 9px; right: 9px; border-width: 0 1.5px 1.5px 0; }
+    .containment__label {
+      position: absolute; top: 1.05rem; left: 50%; translate: -50% 0;
+      font-family: var(--font-mono); font-size: .56rem; letter-spacing: .22em;
+      color: var(--pulse);
+      white-space: nowrap;
+    }
+    .containment__sub {
+      position: absolute; bottom: 1.05rem; left: 50%; translate: -50% 0;
+      font-family: var(--font-mono); font-size: .53rem; letter-spacing: .16em;
+      color: color-mix(in srgb, var(--bone-dim) 60%, transparent);
+      white-space: nowrap;
+    }
+
+    /* the austere ledger card — quotes anneledger.com's aesthetic:
+       paper, ruled lines, tabular numerals, one accent (ledger red) */
+    .ledgercard {
+      --paper: #F7F3E8;
+      --paper-ink: #1C1B17;
+      --paper-faint: #6E695C;
+      --ledger-red: #B33115;
+      background: var(--paper);
+      color: var(--paper-ink);
+      border-radius: 3px;
+      padding: 1.9rem 1.7rem 1.6rem 2.4rem;
+      margin: 1.8rem 0 1.6rem;
+      position: relative;
+      font-family: var(--font-mono);
+      box-shadow: 0 18px 50px -18px rgba(0,0,0,.7);
+      background-image: repeating-linear-gradient(
+        to bottom, transparent 0, transparent 27px, rgba(28,27,23,.08) 27px, rgba(28,27,23,.08) 28px);
+    }
+    .ledgercard::before {
+      /* the classic red margin rule */
+      content: ''; position: absolute; top: 0; bottom: 0; left: 1.55rem;
+      width: 1px; background: color-mix(in srgb, var(--ledger-red) 55%, transparent);
+    }
+    .ledgercard__head {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+      font-size: .6rem; letter-spacing: .14em; color: var(--paper-faint);
+      margin-bottom: 1.2rem;
+    }
+    .ledgercard__head strong { color: var(--paper-ink); font-weight: 400; font-size: .72rem; }
+    .ledgercard__head span { white-space: nowrap; }
+    .ledgercard__premise {
+      font-family: var(--font-display); font-weight: 400;
+      font-size: clamp(1.15rem, 2vw, 1.45rem);
+      line-height: 1.3; letter-spacing: -0.01em;
+      color: var(--paper-ink);
+      margin-bottom: 1.4rem;
+    }
+    .ledgercard table { width: 100%; border-collapse: collapse; font-size: .68rem; letter-spacing: .06em; }
+    .ledgercard td { padding: .48rem 0; vertical-align: top; border-bottom: 1px solid rgba(28,27,23,.14); }
+    .ledgercard td:first-child { color: var(--paper-faint); width: 34%; padding-right: 1rem; letter-spacing: .12em; }
+    .ledgercard td:last-child { font-variant-numeric: tabular-nums; }
+    .ledgercard tr:last-child td { border-bottom: none; }
+    .ledgercard__live { color: var(--ledger-red); }
+    .ledgercard__live::before { content: '●'; margin-right: .5em; animation: livepulse 2.4s ease-in-out infinite; display: inline-block; }
+    @keyframes livepulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+    .ledgercard__stamp {
+      position: absolute; right: 1.2rem; bottom: 4.6rem;
+      rotate: -6deg;
+      border: 2px solid var(--ledger-red);
+      color: var(--ledger-red);
+      border-radius: 3px;
+      padding: .35rem .7rem;
+      font-size: .6rem; letter-spacing: .22em;
+      opacity: .85;
+      transform-origin: center;
+    }
+    .ledgercard__foot {
+      margin-top: 1.2rem;
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+      font-size: .58rem; letter-spacing: .1em; color: var(--paper-faint);
+    }
+    .lab-readlink {
+      display: inline-block;
+      font-family: var(--font-mono); font-size: .66rem; letter-spacing: .16em;
+      color: var(--bone);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .8rem 1.5rem;
+      transition: color .3s, border-color .3s, background .3s;
+    }
+    .lab-readlink:hover { color: var(--ink); background: var(--pulse); border-color: var(--pulse); }
+
+    /* experiment 002 — honest in-preparation */
+    .prep {
+      position: relative;
+      border: 1px dashed var(--line);
+      border-radius: 6px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: clamp(2rem, 5vw, 3.5rem);
+      min-height: 24rem;
+      color: var(--bone-dim);
+      overflow: hidden;
+    }
+    .prep__num {
+      font-family: var(--font-display); font-weight: 300; font-style: italic;
+      font-size: clamp(5rem, 12vw, 9rem);
+      line-height: 1;
+      color: color-mix(in srgb, var(--bone) 7%, transparent);
+      font-variation-settings: 'opsz' 144, 'SOFT' 100;
+      user-select: none;
+    }
+    .prep__badge {
+      font-family: var(--font-mono); font-size: .62rem; letter-spacing: .22em;
+      color: var(--sage);
+      border: 1px solid var(--sage-dim); border-radius: 999px;
+      padding: .45rem .95rem;
+      margin: 1.2rem 0 .9rem;
+    }
+    .prep__note { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .14em; max-width: 22rem; line-height: 2; }
+
+    /* governance strip */
+    .gov { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--ink-2); }
+    .gov__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+      gap: 1px; background: var(--line-soft);
+      border: 1px solid var(--line-soft); border-radius: 4px; overflow: hidden;
+    }
+    .gov__item { background: var(--ink); padding: 1.5rem 1.4rem; }
+    .gov__item b {
+      display: block; font-family: var(--font-mono); font-weight: 400;
+      font-size: .62rem; letter-spacing: .16em; color: var(--pulse);
+      margin-bottom: .7rem;
+    }
+    .gov__item p { font-size: .85rem; color: var(--bone-dim); line-height: 1.6; }
+
+    /* cross links */
+    .lab-cross { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .lab-footer {
+      border-top: 1px solid var(--line-soft);
+      padding: 2rem var(--gutter);
+      display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+      font-family: var(--font-mono); font-size: .56rem; letter-spacing: .12em;
+      color: var(--bone-dim);
+    }
+    .lab-footer a { color: var(--sage); transition: color .3s; }
+    .lab-footer a:hover { color: var(--pulse); }
+
+    @media (max-width: 700px) {
+      .ledgercard__stamp {
+        position: static;
+        display: block;
+        width: max-content;
+        margin: 1rem 0 .2rem auto;
+        rotate: -4deg;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .containment::before { animation: none; }
+      .ledgercard__live::before { animation: none; }
+    }
+  </style>
+</head>
+<body class="lab-page" data-theme="exam-room">
+  <script>document.body.classList.add('js');</script>
+  <a class="skip-link" href="#lab-main">Skip to content</a>
+
+  <canvas class="lab-canvas" id="lab-canvas" aria-hidden="true"></canvas>
+
+  <header class="lab-hud">
+    <a class="lab-hud__back" href="/">
+      <svg viewBox="0 0 34 14" aria-hidden="true"><path d="M0 7 H8 L11 7 L14 1 L18 13 L21 4 L23 7 H34" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+      ← THE PRACTICE
+    </a>
+    <span class="lab-hud__title">OLDCARTS LABORATORY</span>
+    <div class="lab-hud__status" aria-hidden="true">
+      <span>EXPERIMENTS <i class="live">001 LIVE</i></span>
+      <span>IN PREPARATION <i>001</i></span>
+      <span>PROTOCOL <i>HUMAN-GATED</i></span>
+    </div>
+  </header>
+
+  <main id="lab-main">
+
+    <!-- ══ HERO ══ -->
+    <section class="lab-hero">
+      <p class="lab-hero__eyebrow mono" data-reveal><span class="tick">✚</span> THE RESEARCH WING — OPERATED BY OLDCARTS LTD CO</p>
+      <h1 class="lab-hero__title">
+        <span data-split>The</span> <em data-split>Labor<span class="wonk">a</span>tory.</em>
+      </h1>
+      <p class="lab-hero__sub" data-reveal>
+        A process-first consulting practice, running <em>public, governed experiments</em>
+        in autonomous AI — on ourselves, before we ever recommend any of it to you.
+      </p>
+      <div class="lab-hero__readouts" data-reveal aria-hidden="true">
+        <span class="live">ACTIVE EXPERIMENTS <b>001</b></span>
+        <span>IN PREPARATION <b>001</b></span>
+        <span>DISCLOSURE <b>ALWAYS AI</b></span>
+        <span>BUDGETS <b>HARD-CAPPED</b></span>
+        <span>KILL-SWITCH <b>OPERATOR-HELD</b></span>
+      </div>
+    </section>
+
+    <!-- ══ 01 MANIFESTO ══ -->
+    <section class="lab-manifesto" id="why">
+      <span class="section-head__num mono">L-01 — WHY A CONSULTANCY RUNS EXPERIMENTS</span>
+      <h2 class="lab-manifesto__quote">We don't recommend anything<br/>we haven't <em>survived ourselves.</em></h2>
+      <p>
+        The practice diagnoses businesses before prescribing to them. The Laboratory applies the same
+        discipline to applied AI: <strong>we test governance, autonomy, and transparency on our own
+        business first</strong> — with real money, real stakes, and the results published either way.
+      </p>
+      <p>
+        What the experiments produce becomes methodology. The artifacts they run on —
+        <strong>constitutions, credential ledgers, field-journal templates</strong> — become reusable
+        assets our clients inherit, already field-tested.
+      </p>
+    </section>
+
+    <!-- ══ 02 EXPERIMENTS ══ -->
+    <section id="experiments">
+      <div class="section-head">
+        <span class="section-head__num mono">L-02 — THE EXPERIMENTS</span>
+        <h2 class="section-head__title">The spectacle is here.<br/><em>The evidence is theirs.</em></h2>
+        <p class="section-head__note">Each experiment lives on its own deliberately austere site — plain paper, ruled
+        lines, auditable numbers. This wing is the frame; the receipts are the picture.</p>
+      </div>
+
+      <div class="lab-grid">
+        <!-- EXPERIMENT 001 -->
+        <article class="containment" id="exp-001">
+          <span class="containment__ticks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="containment__label">EXPERIMENT 001 — CONTAINMENT: OPEN AIR</span>
+
+          <div class="ledgercard" id="ledgercard">
+            <div class="ledgercard__head">
+              <strong>ANNE LEDGER</strong>
+              <span>EXP. 001 · EST. 2026</span>
+            </div>
+            <p class="ledgercard__premise">Can an autonomous AI agent ethically earn more than it spends — in public, with receipts?</p>
+            <table>
+              <tr><td>DURATION</td><td>90 days</td></tr>
+              <tr><td>BUDGET</td><td>$400</td></tr>
+              <tr><td>GIVING</td><td>15% of gross revenue → National Organization for Rare Disorders (NORD)</td></tr>
+              <tr><td>OPERATOR</td><td>OLDCARTS LTD CO</td></tr>
+              <tr><td>DISCLOSURE</td><td>An AI agent, and says so</td></tr>
+              <tr><td>STATUS</td><td><span class="ledgercard__live">LIVE</span></td></tr>
+            </table>
+            <span class="ledgercard__stamp" id="ledger-stamp">OPEN LEDGER</span>
+            <div class="ledgercard__foot">
+              <span>EVERY DOLLAR IN AND OUT, PUBLISHED WEEKLY</span>
+            </div>
+          </div>
+
+          <a class="lab-readlink" href="https://anneledger.com" rel="noopener">READ THE LEDGER — ANNELEDGER.COM →</a>
+          <span class="containment__sub">THE AUSTERITY IS HERS. THE FIREWORKS ARE OURS.</span>
+        </article>
+
+        <!-- EXPERIMENT 002 -->
+        <article class="prep" id="exp-002" aria-label="Experiment 002 — in preparation">
+          <span class="prep__num" aria-hidden="true">002</span>
+          <span class="prep__badge">IN PREPARATION</span>
+          <p class="prep__note">DETAILS WHEN IT'S REAL.<br/>NO TEASERS, NO COUNTDOWNS —<br/>THAT'S THE WHOLE POINT OF THIS WING.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ══ 03 GOVERNANCE ══ -->
+    <section class="gov" id="governance">
+      <div class="section-head">
+        <span class="section-head__num mono">L-03 — PROTOCOL: THE TRUST LAYER</span>
+        <h2 class="section-head__title">How every experiment<br/><em>is allowed to run.</em></h2>
+      </div>
+      <div class="gov__grid">
+        <div class="gov__item"><b>HUMAN-GATED</b><p>A human operator approves consequential actions before they happen. Autonomy runs inside consent, not instead of it.</p></div>
+        <div class="gov__item"><b>CREDENTIAL-LEDGERED</b><p>Every access an agent holds is granted deliberately, logged, and revocable. Nothing is borrowed quietly.</p></div>
+        <div class="gov__item"><b>HARD BUDGET CAPS</b><p>Experiments run on fixed budgets that cannot be exceeded. Running out of money is a result, not a failure of the rules.</p></div>
+        <div class="gov__item"><b>ALWAYS DISCLOSED</b><p>Our agents are AI and say so, to everyone, every time. No pretending to be people. Ever.</p></div>
+        <div class="gov__item"><b>OPERATOR KILL-SWITCH</b><p>Every experiment can be ended by its operator at any moment, for any reason. The lab door locks from the outside.</p></div>
+      </div>
+    </section>
+
+    <!-- ══ 04 CROSS ══ -->
+    <section id="lab-cross">
+      <div class="section-head">
+        <span class="section-head__num mono">L-04 — THE PRACTICE BEHIND THE LAB</span>
+        <h2 class="section-head__title">Diagnosis first.<br/><em>Even for ourselves.</em></h2>
+        <p class="section-head__note">The Laboratory exists because the consulting practice does — same method, same rigor, different patient.</p>
+      </div>
+      <div class="lab-cross">
+        <a class="btn btn--solid" href="/#practitioner" data-magnetic>Meet the practitioner</a>
+        <a class="btn btn--ghost" href="/#consult" data-magnetic>Begin a consultation</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="lab-footer">
+    <span>© 2026 OLDCARTS CONSULTING LLC — THE LABORATORY IS OPERATED BY OLDCARTS LTD CO</span>
+    <a href="/">OLDCARTS.COM ✚</a>
+  </footer>
+
+  <script src="/vendor/gsap.min.js" defer></script>
+  <script src="/vendor/ScrollTrigger.min.js" defer></script>
+  <script defer>
+  addEventListener('DOMContentLoaded', function () {
+    'use strict';
+    var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (window.gsap) gsap.registerPlugin(ScrollTrigger);
+
+    /* reveals */
+    if (window.gsap && !reduced) {
+      gsap.utils.toArray('[data-reveal]').forEach(function (el) {
+        gsap.fromTo(el, { opacity: 0, y: 30 }, {
+          opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 90%' }
+        });
+      });
+      gsap.utils.toArray('[data-split]').forEach(function (el, i) {
+        gsap.fromTo(el, { opacity: 0, y: 44 }, { opacity: 1, y: 0, duration: 1.1, delay: .1 + i * .12, ease: 'power4.out' });
+      });
+      /* the stamp lands — quoting the experiment's own micro-animation language */
+      var stamp = document.getElementById('ledger-stamp');
+      if (stamp) {
+        gsap.fromTo(stamp, { scale: 2.2, opacity: 0, rotate: 6 }, {
+          scale: 1, opacity: .85, rotate: -6, duration: .45, ease: 'power4.in',
+          scrollTrigger: { trigger: '#ledgercard', start: 'top 65%' }
+        });
+      }
+      /* containment frame drift */
+      gsap.fromTo('#exp-001', { y: 24 }, { y: -14, ease: 'none',
+        scrollTrigger: { trigger: '#experiments', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+      gsap.fromTo('#exp-002', { y: 44 }, { y: -4, ease: 'none',
+        scrollTrigger: { trigger: '#experiments', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+    } else {
+      document.querySelectorAll('[data-reveal],[data-split]').forEach(function (el) { el.style.opacity = 1; });
+    }
+
+    /* background: drifting culture field — sage motes, occasional coral, scan sweep */
+    var cv = document.getElementById('lab-canvas');
+    var ctx = cv.getContext('2d');
+    var W, H, motes = [];
+    function size() {
+      W = cv.width = innerWidth * Math.min(devicePixelRatio, 1.5);
+      H = cv.height = innerHeight * Math.min(devicePixelRatio, 1.5);
+      motes = [];
+      var n = matchMedia('(max-width: 760px)').matches ? 42 : 90;
+      for (var i = 0; i < n; i++) {
+        motes.push({
+          x: Math.random() * W, y: Math.random() * H,
+          r: (Math.random() * 2.2 + 0.6) * Math.min(devicePixelRatio, 1.5),
+          vx: (Math.random() - 0.5) * 0.18, vy: (Math.random() - 0.5) * 0.18,
+          coral: Math.random() < 0.12,
+          ph: Math.random() * Math.PI * 2
+        });
+      }
+    }
+    size();
+    addEventListener('resize', size);
+    var t0 = performance.now();
+    function draw(now) {
+      var t = (now - t0) / 1000;
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < motes.length; i++) {
+        var m = motes[i];
+        m.x = (m.x + m.vx + W) % W;
+        m.y = (m.y + m.vy + H) % H;
+        var tw = 0.45 + 0.35 * Math.sin(t * 0.8 + m.ph);
+        ctx.beginPath();
+        ctx.arc(m.x, m.y, m.r * (1 + 0.2 * Math.sin(t + m.ph)), 0, 7);
+        ctx.fillStyle = m.coral ? 'rgba(255,92,66,' + (tw * 0.5) + ')' : 'rgba(143,184,165,' + (tw * 0.32) + ')';
+        ctx.fill();
+      }
+      if (!reduced) requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden && !reduced) requestAnimationFrame(draw);
+    });
+  });
+  </script>
+  <!-- GA4 — deferred so analytics never competes with first paint -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VL294SE3MP', { anonymize_ip: true });
+    addEventListener('load', function () {
+      setTimeout(function () {
+        var s = document.createElement('script');
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-VL294SE3MP';
+        s.async = true;
+        document.head.appendChild(s);
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
