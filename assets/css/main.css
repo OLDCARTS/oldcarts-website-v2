@@ -843,6 +843,34 @@ section { padding: clamp(6rem, 12vh, 10rem) var(--gutter); position: relative; }
   transition: border-color .3s, color .3s, background .3s;
 }
 .practitioner__creds li:hover { border-color: var(--sage); color: var(--sage); background: rgba(143,184,165,.06); }
+.fullcircle {
+  margin-top: 2.6rem;
+  max-width: 40rem;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--pulse);
+  border-radius: 4px;
+  background: var(--ink);
+  padding: 1.6rem 1.7rem 1.5rem;
+}
+.fullcircle__label {
+  display: block;
+  font-size: .58rem; letter-spacing: .16em;
+  color: var(--pulse);
+  margin-bottom: 1rem;
+}
+.fullcircle p { color: var(--bone-dim); margin-bottom: 1rem; }
+.fullcircle p strong { color: var(--bone); font-weight: 560; }
+.fullcircle__coda em { color: var(--sage); }
+.fullcircle__link {
+  display: inline-block;
+  font-size: .6rem; letter-spacing: .16em;
+  color: var(--bone-dim);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: .25rem;
+  transition: color .3s, border-color .3s;
+}
+.fullcircle__link:hover { color: var(--pulse); border-color: var(--pulse); }
+
 @media (max-width: 900px) {
   .practitioner__grid { grid-template-columns: 1fr; }
   .practitioner__specimen { position: static; max-width: 30rem; }
