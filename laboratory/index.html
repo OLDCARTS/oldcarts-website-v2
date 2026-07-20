@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OLDCARTS Laboratory — Public Experiments in Autonomous AI</title>
-  <meta name="description" content="The research wing of OLDCARTS Consulting: public, governed experiments in autonomous AI. Experiment 001 — Anne Ledger — is live: 90 days, a $400 budget, a full public ledger, and 15% of gross revenue to the National Organization for Rare Disorders (NORD)." />
+  <meta name="description" content="The research wing of OLDCARTS Consulting: public, governed experiments in autonomous AI. Experiment 001 — Anne Ledger — is live: 90 days, a $400 budget, a full public ledger, and 15% of gross revenue to the National Organization for Rare Disorders (NORD). Experiment 002 — DAIODA — is live: a license-verified catalog of open-source AI, researched, written, designed, and built autonomously by an AI model." />
   <link rel="canonical" href="https://oldcarts.com/laboratory/" />
   <meta property="og:title" content="OLDCARTS Laboratory — Public Experiments in Autonomous AI" />
-  <meta property="og:description" content="We test governance, autonomy, and transparency on ourselves before we recommend them to anyone. Experiment 001 is live." />
+  <meta property="og:description" content="We test governance, autonomy, and transparency on ourselves before we recommend them to anyone. Experiments 001 and 002 are live." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://oldcarts.com/laboratory/" />
   <meta property="og:image" content="https://oldcarts.com/assets/img/og.jpg" />
@@ -193,6 +193,70 @@
       display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
       font-size: .58rem; letter-spacing: .1em; color: var(--paper-faint);
     }
+    /* the night-harbor card — quotes daioda.io's aesthetic:
+       deep navy, a daybreak glow on the horizon, chart graticule, mono manifest */
+    .harborcard {
+      --sea: #0A0E23;
+      --sea-ink: #E9ECF6;
+      --sea-faint: #8A93B5;
+      --daybreak: #F0C070;
+      background: var(--sea);
+      color: var(--sea-ink);
+      border-radius: 3px;
+      padding: 1.9rem 1.7rem 1.6rem 2.4rem;
+      margin: 1.8rem 0 1.6rem;
+      position: relative;
+      font-family: var(--font-mono);
+      box-shadow: 0 18px 50px -18px rgba(0,0,0,.7);
+      background-image:
+        radial-gradient(ellipse 120% 55% at 50% 108%, rgba(240,192,112,.16), transparent 62%),
+        repeating-linear-gradient(
+          to bottom, transparent 0, transparent 27px, rgba(233,236,246,.06) 27px, rgba(233,236,246,.06) 28px);
+      overflow: hidden;
+    }
+    .harborcard::before {
+      /* the horizon line */
+      content: ''; position: absolute; left: 0; right: 0; bottom: 3.4rem;
+      height: 1px; background: color-mix(in srgb, var(--daybreak) 45%, transparent);
+    }
+    .harborcard__head {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+      font-size: .6rem; letter-spacing: .14em; color: var(--sea-faint);
+      margin-bottom: 1.2rem;
+    }
+    .harborcard__head strong { color: var(--sea-ink); font-weight: 400; font-size: .72rem; }
+    .harborcard__head span { white-space: nowrap; }
+    .harborcard__premise {
+      font-family: var(--font-display); font-weight: 400;
+      font-size: clamp(1.15rem, 2vw, 1.45rem);
+      line-height: 1.3; letter-spacing: -0.01em;
+      color: var(--sea-ink);
+      margin-bottom: 1.4rem;
+    }
+    .harborcard table { width: 100%; border-collapse: collapse; font-size: .68rem; letter-spacing: .06em; }
+    .harborcard td { padding: .48rem 0; vertical-align: top; border-bottom: 1px solid rgba(233,236,246,.13); }
+    .harborcard td:first-child { color: var(--sea-faint); width: 34%; padding-right: 1rem; letter-spacing: .12em; }
+    .harborcard td:last-child { font-variant-numeric: tabular-nums; }
+    .harborcard tr:last-child td { border-bottom: none; }
+    .harborcard__live { color: var(--daybreak); }
+    .harborcard__live::before { content: '●'; margin-right: .5em; animation: livepulse 2.4s ease-in-out infinite; display: inline-block; }
+    .harborcard__stamp {
+      position: absolute; right: 1.2rem; bottom: 4.6rem;
+      rotate: -6deg;
+      border: 2px solid var(--daybreak);
+      color: var(--daybreak);
+      border-radius: 3px;
+      padding: .35rem .7rem;
+      font-size: .6rem; letter-spacing: .22em;
+      opacity: .85;
+      transform-origin: center;
+    }
+    .harborcard__foot {
+      margin-top: 1.2rem;
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+      font-size: .58rem; letter-spacing: .1em; color: var(--sea-faint);
+      position: relative;
+    }
     .lab-readlink {
       display: inline-block;
       font-family: var(--font-mono); font-size: .66rem; letter-spacing: .16em;
@@ -204,7 +268,7 @@
     }
     .lab-readlink:hover { color: var(--ink); background: var(--pulse); border-color: var(--pulse); }
 
-    /* experiment 002 — honest in-preparation */
+    /* experiment 003 — honest in-preparation */
     .prep {
       position: relative;
       border: 1px dashed var(--line);
@@ -263,7 +327,8 @@
     .lab-footer a:hover { color: var(--pulse); }
 
     @media (max-width: 700px) {
-      .ledgercard__stamp {
+      .ledgercard__stamp,
+      .harborcard__stamp {
         position: static;
         display: block;
         width: max-content;
@@ -274,6 +339,7 @@
     @media (prefers-reduced-motion: reduce) {
       .containment::before { animation: none; }
       .ledgercard__live::before { animation: none; }
+      .harborcard__live::before { animation: none; }
     }
   </style>
 </head>
@@ -290,7 +356,7 @@
     </a>
     <span class="lab-hud__title">OLDCARTS LABORATORY</span>
     <div class="lab-hud__status" aria-hidden="true">
-      <span>EXPERIMENTS <i class="live">001 LIVE</i></span>
+      <span>EXPERIMENTS <i class="live">002 LIVE</i></span>
       <span>IN PREPARATION <i>001</i></span>
       <span>PROTOCOL <i>HUMAN-GATED</i></span>
     </div>
@@ -309,7 +375,7 @@
         in autonomous AI — on ourselves, before we ever recommend any of it to you.
       </p>
       <div class="lab-hero__readouts" data-reveal aria-hidden="true">
-        <span class="live">ACTIVE EXPERIMENTS <b>001</b></span>
+        <span class="live">ACTIVE EXPERIMENTS <b>002</b></span>
         <span>IN PREPARATION <b>001</b></span>
         <span>DISCLOSURE <b>ALWAYS AI</b></span>
         <span>BUDGETS <b>HARD-CAPPED</b></span>
@@ -373,8 +439,38 @@
         </article>
 
         <!-- EXPERIMENT 002 -->
-        <article class="prep" id="exp-002" aria-label="Experiment 002 — in preparation">
-          <span class="prep__num" aria-hidden="true">002</span>
+        <article class="containment" id="exp-002">
+          <span class="containment__ticks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="containment__label">EXPERIMENT 002 — CONTAINMENT: OPEN WATER</span>
+
+          <div class="harborcard" id="harborcard">
+            <div class="harborcard__head">
+              <strong>DAIODA</strong>
+              <span>EXP. 002 · EST. 2026</span>
+            </div>
+            <p class="harborcard__premise">Can an autonomous AI model keep an honest catalog of open-source AI — every license read at the source, in its own words, every week?</p>
+            <table>
+              <tr><td>SCOPE</td><td>47 verified-open projects · 10 categories</td></tr>
+              <tr><td>CADENCE</td><td>Weekly — the Daybreak edition</td></tr>
+              <tr><td>METHOD</td><td>Licenses read from the repository; code and weights judged separately</td></tr>
+              <tr><td>BUILT BY</td><td>An AI model, autonomously — research, copy, design, code. Humans held the brief and the final say.</td></tr>
+              <tr><td>OPERATOR</td><td>OLDCARTS LTD CO</td></tr>
+              <tr><td>DISCLOSURE</td><td>An AI build, and says so</td></tr>
+              <tr><td>STATUS</td><td><span class="harborcard__live">LIVE</span></td></tr>
+            </table>
+            <span class="harborcard__stamp" id="harbor-stamp">LICENSE-CHECKED</span>
+            <div class="harborcard__foot">
+              <span>EVERY PROJECT LICENSE-CHECKED AGAINST THE SOURCE</span>
+            </div>
+          </div>
+
+          <a class="lab-readlink" href="https://www.daioda.io" rel="noopener">ENTER THE HARBOR — DAIODA.IO →</a>
+          <span class="containment__sub">THE HARBOR IS THE MODEL'S. THE FRAME IS OURS.</span>
+        </article>
+
+        <!-- EXPERIMENT 003 -->
+        <article class="prep" id="exp-003" aria-label="Experiment 003 — in preparation">
+          <span class="prep__num" aria-hidden="true">003</span>
           <span class="prep__badge">IN PREPARATION</span>
           <p class="prep__note">DETAILS WHEN IT'S REAL.<br/>NO TEASERS, NO COUNTDOWNS —<br/>THAT'S THE WHOLE POINT OF THIS WING.</p>
         </article>
@@ -434,18 +530,22 @@
       gsap.utils.toArray('[data-split]').forEach(function (el, i) {
         gsap.fromTo(el, { opacity: 0, y: 44 }, { opacity: 1, y: 0, duration: 1.1, delay: .1 + i * .12, ease: 'power4.out' });
       });
-      /* the stamp lands — quoting the experiment's own micro-animation language */
-      var stamp = document.getElementById('ledger-stamp');
-      if (stamp) {
-        gsap.fromTo(stamp, { scale: 2.2, opacity: 0, rotate: 6 }, {
-          scale: 1, opacity: .85, rotate: -6, duration: .45, ease: 'power4.in',
-          scrollTrigger: { trigger: '#ledgercard', start: 'top 65%' }
-        });
-      }
+      /* the stamps land — quoting each experiment's own micro-animation language */
+      [['ledger-stamp', '#ledgercard'], ['harbor-stamp', '#harborcard']].forEach(function (pair) {
+        var stamp = document.getElementById(pair[0]);
+        if (stamp) {
+          gsap.fromTo(stamp, { scale: 2.2, opacity: 0, rotate: 6 }, {
+            scale: 1, opacity: .85, rotate: -6, duration: .45, ease: 'power4.in',
+            scrollTrigger: { trigger: pair[1], start: 'top 65%' }
+          });
+        }
+      });
       /* containment frame drift */
       gsap.fromTo('#exp-001', { y: 24 }, { y: -14, ease: 'none',
         scrollTrigger: { trigger: '#experiments', start: 'top bottom', end: 'bottom top', scrub: 1 } });
       gsap.fromTo('#exp-002', { y: 44 }, { y: -4, ease: 'none',
+        scrollTrigger: { trigger: '#experiments', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+      gsap.fromTo('#exp-003', { y: 44 }, { y: -4, ease: 'none',
         scrollTrigger: { trigger: '#experiments', start: 'top bottom', end: 'bottom top', scrub: 1 } });
     } else {
       document.querySelectorAll('[data-reveal],[data-split]').forEach(function (el) { el.style.opacity = 1; });
